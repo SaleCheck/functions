@@ -9,7 +9,7 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "gcp-build": "node node_modules/puppeteer/install.mjs",
-    "test": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8080 mocha '**/*.test.js'"
+    "test": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8080 mocha '*.test.js'"
   },
   "engines": {
     "node": "22"
