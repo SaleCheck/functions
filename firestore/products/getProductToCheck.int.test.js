@@ -35,7 +35,17 @@ exports.getProductToCheckIntTest = function () {
     });
 
     after(async () => {
-      await db.collection("productsToCheck").doc(testProductId).delete();
+      if (testProductId) await db.collection("productsToCheck").doc(testProductId).delete();
+    });
+
+    it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
+      const res = await request(app)
+        .options('/getProductToCheck')     
+        .set('Origin', 'http://example.com');
+
+      expect(res.status).to.be.oneOf([200, 204]);
+      expect(res.headers).to.have.property('access-control-allow-origin');
+      expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
     });
 
     it('should return 200 and the product snapshot data if it exists', async () => {
@@ -59,6 +69,11 @@ exports.getProductToCheckIntTest = function () {
 
     it("should return 405 if req method is not GET", function () {
       console.warn("⚠️ Still TBA.");
+      this.skip();
+    });
+
+    it("should return 500 if fetching from Firestore fails ", function () {
+      console.warn("⚠️ Still TBA:");
       this.skip();
     });
   });
