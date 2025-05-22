@@ -19,6 +19,7 @@
 // // });
 
 const { getProductToCheckIntTest } = require('./firestore/products/getProductToCheck.int.test');
+const { createProductToCheckIntTest } = require('./firestore/products/createProductToCheck.int.test');
 
 getProductToCheckIntTest();
-  
+createProductToCheckIntTest();
