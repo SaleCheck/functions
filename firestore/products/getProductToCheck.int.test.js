@@ -5,7 +5,7 @@ const request = require('supertest');
 const express = require('express');
 
 if (!process.env.FIRESTORE_EMULATOR_HOST) throw new Error('FIRESTORE_EMULATOR_HOST is not set');
-if (!admin.apps.length) admin.initializeApp({ projectId: process.env.PROJECT_ID })
+if (!admin.apps.length) admin.initializeApp({ projectId: process.env.PROJECT_ID });
 const { getProductToCheck } = require('./getProductToCheck');
 
 const db = getFirestore();
