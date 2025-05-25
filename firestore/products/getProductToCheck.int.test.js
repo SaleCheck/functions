@@ -1,4 +1,3 @@
-const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const request = require('supertest');
