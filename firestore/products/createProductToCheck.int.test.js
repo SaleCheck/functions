@@ -57,9 +57,8 @@ exports.createProductToCheckIntTest = function () {
             expect(res.body).to.have.property('message', 'Product added successfully');
             expect(res.body).to.have.property('documentId');
 
-            const testProductId = res.body.documentId;
-
-            const docRef = db.collection("productsToCheck").doc(res.body.documentId);
+            testProductId = res.body.documentId; // also needed for test teardown;
+            const docRef = db.collection("productsToCheck").doc(testProductId);
             const docSnap = await docRef.get();
 
             expect(docSnap.exists).to.be.true;
