@@ -28,8 +28,8 @@ exports.createUser = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async (r
             await sendEmailVerification(auth.currentUser);
             
             await updateProfile(user, {
-                displayName: displayName || null,
-                photoURL: photoURL || null,
+                displayName: displayName || '',
+                photoURL: photoURL || '',
             })
             
             return res.status(201).send({ status: "Success", user: user });
