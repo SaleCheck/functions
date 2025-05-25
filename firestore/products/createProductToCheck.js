@@ -1,7 +1,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { getFirestore, Timestamp } = require("firebase-admin/firestore");
 const cors = require('cors')({ origin: true });
-const { ALLOWED_FIELDS } = require("./productSchema");
+const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
 
 const db = getFirestore();
 
