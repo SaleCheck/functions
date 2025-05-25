@@ -105,14 +105,24 @@ exports.deleteProductToCheckIntTest = function () {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 404 if product does not exist", function () {
-            console.warn("⚠️ Still TBA.");
-            this.skip();
+        it("should return 404 if product does not exist", async () => {
+            const deletePayload = { "data": { "id": 'nonexistent-id-123456' } };
+            const res = await request(app)
+                .delete('/deleteProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(deletePayload);
+
+            expect(res.status).to.equal(404);
         });
 
-        it("should return 405 if req method is not DELETE", function () {
-            console.warn("⚠️ Still TBA.");
-            this.skip();
+        it("should return 405 if req method is not DELETE", async () => {
+            const deletePayload = { "data": { "id": testProductId } };
+            const res = await request(app)
+                .post('/deleteProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(deletePayload);
+
+            expect(res.status).to.equal(405);
         });
 
         it("should return 500 if serverside error", function () {
