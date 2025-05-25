@@ -16,7 +16,7 @@ app.use(express.json());
 app.use('/createProductToCheck', createProductToCheck);
 
 exports.createProductToCheckIntTest = function () {
-    describe('GET /getProductToCheck', () => {
+    describe('GET /createProductToCheck', () => {
         let testProductId;
         const testProductData = {
             "data": {
@@ -51,8 +51,7 @@ exports.createProductToCheckIntTest = function () {
             const res = await request(app)
                 .post('/createProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(testProductData)
-
+                .send(testProductData);
 
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('message', 'Product added successfully');
@@ -89,7 +88,7 @@ exports.createProductToCheckIntTest = function () {
             this.skip();
         });
 
-        it("should return 405 if req method is not POST", function () {
+        it("should return 405 if req method is not GET", function () {
             console.warn("⚠️ Still TBA:");
             this.skip();
         });
