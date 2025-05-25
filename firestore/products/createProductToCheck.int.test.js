@@ -3,6 +3,7 @@ const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
+const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
 
 if (!process.env.FIRESTORE_EMULATOR_HOST) throw new Error('FIRESTORE_EMULATOR_HOST is not set');
 if (!admin.apps.length) admin.initializeApp({ projectId: process.env.PROJECT_ID });
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use('/createProductToCheck', createProductToCheck);
 
 exports.createProductToCheckIntTest = function () {
-    describe('GET /createProductToCheck', () => {
+    describe('POST /createProductToCheck', () => {
         let testProductId;
         const testProductData = {
             "data": {
@@ -72,29 +73,89 @@ exports.createProductToCheckIntTest = function () {
             expect(docSnap.data().lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
 
-        it("should return 400 if Content-Type is not application/json", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if content-type is not application/json", async () => {
+            const res = await request(app)
+                .post('/createProductToCheck')
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send(testProductData);
+
+            expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload is empty", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if payload is empty", async () => {
+            const res = await request(app)
+                .post('/createProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send({});
+
+            expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload is missing any expected params", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if payload is missing any expected params", async () => {
+            for (const key of ALLOWED_FIELDS) {
+                const incompletePayload = JSON.parse(JSON.stringify(testProductData));
+                delete incompletePayload.data[key];
+
+                const res = await request(app)
+                    .post('/createProductToCheck')
+                    .set('Content-Type', 'application/json')
+                    .send(incompletePayload);
+
+                expect(res.status).to.equal(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body.error).to.include(`Missing field ${key}`);
+            }
         });
 
-        it("should return 405 if req method is not GET", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 405 if req method is not POST", async () => {
+            const res = await request(app)
+                .get('/createProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(testProductData);
+
+            expect(res.status).to.equal(405);
         });
 
-        it("should ignore keys in payload not allowed in productSchema", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should ignore keys in payload not allowed in productsFirestoreStructureConfig", async () => {
+            const invalidFields = {
+                "invalidKey1": "value1",
+                "invalidKey2": 12345,
+                "invalidKey3": { nested: "object" }
+            };
+
+            const testProductDataWithInvalids = {
+                data: {
+                    ...testProductData.data,
+                    ...invalidFields
+                }
+            };
+
+            const res = await request(app)
+                .post('/createProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(testProductDataWithInvalids);
+
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.property('message', 'Product added successfully');
+            expect(res.body).to.have.property('documentId');
+
+            testProductId = res.body.documentId; // also needed for test teardown;
+            const updatedDocSnap = await db.collection("productsToCheck").doc(testProductId).get();
+            const updatedDocData = updatedDocSnap.data();
+
+            for (const key of Object.keys(testProductDataWithInvalids.data)) {
+                if (ALLOWED_FIELDS.includes(key)) {
+                    expect(updatedDocData).to.have.property(key);
+                    expect(updatedDocData[key]).to.deep.equal(testProductDataWithInvalids.data[key]);
+                } else if (!(ALLOWED_FIELDS.includes(key))) {
+                    expect(updatedDocData).to.not.have.property(key);
+                } else {
+                    throw new Error(`Unexpected key ${key} encountered while validating created product data`);
+                }
+            }
+
+            expect(updatedDocData).to.have.property('createdTimestamp');
+            expect(updatedDocData).to.have.property('lastUpdated');
         });
 
         it("should return 500 if adding to Firestore fails ", function () {

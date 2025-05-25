@@ -58,19 +58,28 @@ exports.getProductToCheckIntTest = function () {
       expect(res.body).to.deep.equal(testProductData)
     });
 
-    it("should return 400 if param id param is missing from payload", function () {
-      console.warn("⚠️ Still TBA:");
-      this.skip();
+    it("should return 400 if param id param is missing from payload", async () => {
+      const res = await request(app)
+        .get('/getProductToCheck')
+        .query({ product: testProductId })
+
+      expect(res.status).to.equal(400);
     });
 
-    it("should return 404 if product does not exist", function () {
-      console.warn("⚠️ Still TBA.");
-      this.skip();
+    it("should return 404 if product does not exist", async () => {
+      const res = await request(app)
+        .get('/getProductToCheck')
+        .query({ id: 'nonexistent-id-123456' })
+
+      expect(res.status).to.equal(404);
     });
 
-    it("should return 405 if req method is not GET", function () {
-      console.warn("⚠️ Still TBA.");
-      this.skip();
+    it("should return 405 if req method is not GET", async () => {
+      const res = await request(app)
+        .post('/getProductToCheck')
+        .query({ id: testProductId })
+
+      expect(res.status).to.equal(405);
     });
 
     it("should return 500 if fetching from Firestore fails ", function () {

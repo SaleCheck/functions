@@ -51,13 +51,13 @@ exports.updateProductToCheckIntTest = function () {
             }
         };
 
-        before(async () => {
+        beforeEach(async () => {
             testProductId = db.collection("productsToCheck").doc().id;
             updTestProductData.data.id = testProductId;
             await db.collection("productsToCheck").doc(testProductId).set(testProductData);
         });
 
-        after(async () => {
+        afterEach(async () => {
             if (testProductId) await db.collection("productsToCheck").doc(testProductId).delete();
         });
 
@@ -91,16 +91,14 @@ exports.updateProductToCheckIntTest = function () {
             expect(updatedDocData.lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
 
-        it("should skip fields not in ALLOWED_FIELDS", async () => {
-            const updTestProductDataWithInvalid = JSON.parse(JSON.stringify(updTestProductData));
-
-            updTestProductDataWithInvalid.data.updateData.unknownField1 = "ShouldNotBeSaved";
-            updTestProductDataWithInvalid.data.updateData.anotherInvalidField = "12345";
+        it("should skip fields not in productsFirestoreStructureConfig", async () => {
+            updTestProductData.data.updateData.unknownField1 = "ShouldNotBeSaved";
+            updTestProductData.data.updateData.anotherInvalidField = "12345";
 
             const res = await request(app)
                 .patch('/updateProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(updTestProductDataWithInvalid);
+                .send(updTestProductData);
 
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('success', true);
@@ -109,9 +107,9 @@ exports.updateProductToCheckIntTest = function () {
             const updatedDocData = updatedDocSnap.data();
 
 
-            for (const key of Object.keys(updTestProductDataWithInvalid.data.updateData)) {
+            for (const key of Object.keys(updTestProductData.data.updateData)) {
                 if (ALLOWED_FIELDS.includes(key)) {
-                    expect(updatedDocData[key]).to.deep.equal(updTestProductDataWithInvalid.data.updateData[key]);
+                    expect(updatedDocData[key]).to.deep.equal(updTestProductData.data.updateData[key]);
 
                 } else if (!(ALLOWED_FIELDS.includes(key))) {
                     expect(updatedDocData).to.not.have.property(key);
@@ -125,19 +123,44 @@ exports.updateProductToCheckIntTest = function () {
             expect(updatedDocData.lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
 
-        it("should return 400 if param id param is missing from payload", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if param id param is missing from payload", async () => {
+            delete updTestProductData.data.id;
+            updTestProductData.data.product = testProductId;     
+
+            const res = await request(app)
+                .patch('/updateProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(updTestProductData);
+
+            expect(res.status).to.equal(400);
         });
 
-        it("should return 404 if product does not exist", function () {
-            console.warn("⚠️ Still TBA.");
-            this.skip();
+        it("should return 400 if content-type is not application/json", async () => {
+            const res = await request(app)
+                .patch('/updateProductToCheck')
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send(updTestProductData);
+
+            expect(res.status).to.equal(400);
         });
 
-        it("should return 405 if req method is not PATCH", function () {
-            console.warn("⚠️ Still TBA.");
-            this.skip();
+        it("should return 404 if product does not exist", async () => {
+            updTestProductData.data.product = 'nonexistent-id-123456';
+            const res = await request(app)
+                .patch('/updateProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(updTestProductData);
+
+            expect(res.status).to.equal(200);
+        });
+
+        it("should return 405 if req method is not PATCH", async () => {
+            const res = await request(app)
+                .post('/updateProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(updTestProductData);
+
+            expect(res.status).to.equal(405);
         });
 
         it("should return 500 if fetching from Firestore fails ", function () {
