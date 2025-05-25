@@ -16,7 +16,7 @@ app.use('/getProductToCheck', getProductToCheck);
 
 exports.getProductToCheckIntTest = function () {
   describe('GET /getProductToCheck', () => {
-    const testProductId = 'test-product-id';
+    let testProductId;
     const testProductData = {
       "productName": "ExampleProduct",
       "expectedPrice": 29.99,
@@ -31,6 +31,7 @@ exports.getProductToCheckIntTest = function () {
     };
 
     before(async () => {
+      testProductId = db.collection("productsToCheck").doc().id;
       await db.collection("productsToCheck").doc(testProductId).set(testProductData);
     });
 
