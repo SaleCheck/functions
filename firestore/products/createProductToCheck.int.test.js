@@ -4,9 +4,6 @@ const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
 const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
-
-if (!process.env.FIRESTORE_EMULATOR_HOST) throw new Error('FIRESTORE_EMULATOR_HOST is not set');
-if (!admin.apps.length) admin.initializeApp({ projectId: process.env.PROJECT_ID });
 const { createProductToCheck } = require('./createProductToCheck');
 
 const db = getFirestore();
