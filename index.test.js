@@ -22,6 +22,7 @@ const { deleteProductToCheckIntTest } = require('./firestore/products/deleteProd
 
 const { createUserIntTest } = require('./auth/createUser.int.test');
 const { getUserIntTest } = require('./auth/getUser.int.test');
+const { updateUserIntTest } = require('./auth/updateUser.int.test');
 const { deleteUserIntTest } = require('./auth/deleteUser.int.test');
 
 createProductToCheckIntTest();
@@ -31,4 +32,5 @@ deleteProductToCheckIntTest();
 
 createUserIntTest();
 getUserIntTest();
+updateUserIntTest();
 deleteUserIntTest();
