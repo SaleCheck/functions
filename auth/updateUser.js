@@ -25,8 +25,12 @@ exports.updateUser = onRequest(async (req, res) => {
             const updatedUser = await getAuth().updateUser(uid, updateData);
             res.status(200).send({ success: true, message: "User updated successfully.", user: updatedUser.toJSON() });
         } catch (error) {
-            console.error("Error updating user:", error);
-            res.status(500).send({ success: false, error: "Internal Server Error", details: error.message });
+            if (error.code === 'auth/user-not-found') {
+                res.status(404).send({ success: false, error: "User not found." });
+            } else {
+                console.error("Error updating user:", error);
+                res.status(500).send({ success: false, status: 'Internal Server Error', details: error });
+            }
         }
     });
 });
