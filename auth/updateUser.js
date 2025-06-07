@@ -15,9 +15,8 @@ if (process.env.FUNCTIONS_EMULATOR === 'true') {
 
 exports.updateUser = onRequest(async (req, res) => {
     cors(req, res, async () => {
-        if (req.method !== "PATCH") {
-            return res.status(405).send({ success: false, error: 'Method Not Allowed. Only PATCH requests are allowed.' });
-        }
+        if (req.method !== "PATCH") return res.status(405).send({ success: false, error: 'Method Not Allowed. Only PATCH requests are allowed.' });
+        if (req.get('Content-Type') !== 'application/json') return res.status(400).send({ success: false, error: 'Content-Type must be application/json.' });
 
         const { uid, updateData } = req.body;
         if (!uid || !updateData) {
