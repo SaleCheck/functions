@@ -105,7 +105,7 @@ exports.updateUserIntTest = function () {
 
         it("should return 404 if user does not exist ", async () => {
             const res = await request(app)
-                .delete('/deleteUser')
+                .delete('/updateUser')
                 .send({ uid: 'nonexistent-id-123456' })
 
             expect(res.status).to.equal(404);
