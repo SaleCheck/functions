@@ -7,7 +7,6 @@ const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json")
 const { updateProductToCheck } = require('./updateProductToCheck');
 
 const db = getFirestore();
-// db.settings({ host: process.env.FIRESTORE_EMULATOR_HOST, ssl: false });
 
 const app = express();
 app.use(express.json());
@@ -160,7 +159,7 @@ exports.updateProductToCheckIntTest = function () {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if fetching from Firestore fails ", function () {
+        it("should return 500 if serverside fails", function () {
             console.warn("⚠️ Still TBA:");
             this.skip();
         });

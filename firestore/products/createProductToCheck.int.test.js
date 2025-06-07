@@ -7,7 +7,6 @@ const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json")
 const { createProductToCheck } = require('./createProductToCheck');
 
 const db = getFirestore();
-// db.settings({ host: process.env.FIRESTORE_EMULATOR_HOST, ssl: false });
 
 const app = express();
 app.use(express.json());
@@ -155,7 +154,7 @@ exports.createProductToCheckIntTest = function () {
             expect(updatedDocData).to.have.property('lastUpdated');
         });
 
-        it("should return 500 if adding to Firestore fails ", function () {
+        it("should return 500 if serverside fails", function () {
             console.warn("⚠️ Still TBA:");
             this.skip();
         });

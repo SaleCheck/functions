@@ -7,7 +7,6 @@ const { deleteProductToCheck } = require('./deleteProductToCheck');
 
 const db = getFirestore();
 const storage = getStorage();
-// db.settings({ host: process.env.FIRESTORE_EMULATOR_HOST, ssl: false });
 
 const app = express();
 app.use(express.json());
@@ -124,7 +123,7 @@ exports.deleteProductToCheckIntTest = function () {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside error", function () {
+        it("should return 500 if serverside fails", function () {
             console.warn("⚠️ Still TBA:");
             this.skip();
         });
