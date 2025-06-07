@@ -26,8 +26,12 @@ exports.getUser = onRequest(async (req, res) => {
                 res.status(200).send({ status: "Success", user: userRecord.toJSON() });
             })
             .catch((error) => {
-                console.error("Error fetching user data:", error);
-                res.status(500).send({ status: 'Internal Server Error', error: error });
+                if (error.code === 'auth/user-not-found') {
+                    res.status(404).send({ success: false, error: "User not found." });    
+                } else {
+                    console.error("Error fetching user data:", error);
+                    res.status(500).send({ status: 'Internal Server Error', error: error });
+                }
             });
     })
 });
