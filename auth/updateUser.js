@@ -19,9 +19,7 @@ exports.updateUser = onRequest(async (req, res) => {
         if (req.get('Content-Type') !== 'application/json') return res.status(400).send({ success: false, error: 'Content-Type must be application/json.' });
 
         const { uid, updateData } = req.body;
-        if (!uid || !updateData) {
-            return res.status(400).send({ success: false, error: "Bad Request: 'uid' and 'updateData' are required in the payload." });
-        }
+        if (!uid || !updateData) return res.status(400).send({ success: false, error: "Bad Request: 'uid' and 'updateData' are required in the payload." });
 
         try {
             const updatedUser = await getAuth().updateUser(uid, updateData);
