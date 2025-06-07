@@ -29,7 +29,7 @@ exports.updateUser = onRequest(async (req, res) => {
                 res.status(404).send({ success: false, error: "User not found." });
             } else {
                 console.error("Error updating user:", error);
-                res.status(500).send({ success: false, status: 'Internal Server Error', details: error });
+                res.status(500).send({ status: 'Internal Server Error', error: error });
             }
         }
     });
