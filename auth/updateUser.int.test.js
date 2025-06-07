@@ -57,7 +57,7 @@ exports.updateUserIntTest = function () {
             expect(res.body).to.have.property('user');
 
             const userRecord = await auth.getUser(updTestUserData.uid);
-            expect(userRecord.photoURL).to.equal(updTestUserData.updateData.photoUrl);            
+            expect(userRecord.photoURL).to.equal(updTestUserData.updateData.photoUrl);
         });
 
         it("should return 400 if payload missing mandatory param uid", async () => {
@@ -104,9 +104,12 @@ exports.updateUserIntTest = function () {
         });
 
         it("should return 404 if user does not exist ", async () => {
+            updTestUserData.uid = 'nonexistent-id-123456';
+
             const res = await request(app)
-                .delete('/updateUser')
-                .send({ uid: 'nonexistent-id-123456' })
+                .patch('/updateUser')
+                .set('Content-Type', 'application/json')
+                .send(updTestUserData);
 
             expect(res.status).to.equal(404);
         });
