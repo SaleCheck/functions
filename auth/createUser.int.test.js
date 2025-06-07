@@ -2,6 +2,7 @@ const { getAuth } = require('firebase-admin/auth');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
+const cors = require('cors');
 const { createUser } = require('./createUser');
 
 const auth = getAuth();
@@ -13,15 +14,18 @@ app.use('/createUser', createUser);
 exports.createUserIntTest = function () {
     describe('POST /createUser', () => {
         let testUserUid;
-        const testUserData = {
-            "data": {
-                "email": "integration.test.user@mailinator.com",
-                "password": "123456",
-                "photoURL": "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
-            }
-        };
+        let testUserData;
 
-        after(async () => {
+        beforeEach(async () => {
+            testUserData = {
+                "data": {
+                    "email": "integration.test.user@mailinator.com",
+                    "password": "123456"
+                }
+            }
+        });
+
+        afterEach(async () => {
             if (testUserUid) auth.deleteUser(testUserUid);
         });
 
@@ -35,39 +39,121 @@ exports.createUserIntTest = function () {
             expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
         });
 
-        it("should return 201 and create user with only mandatory params", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 201 and create user with only mandatory params", async () => {
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('uid');
+            expect(res.body).to.have.property('userAuthObject');
+
+            testUserUid = res.body.uid; // also needed for test teardown;
+            
+            const userRecord = await auth.getUser(testUserUid);
+            expect(userRecord).to.exist;
+            expect(userRecord.uid).to.equal(testUserUid);
+            expect(userRecord.email).to.equal(testUserData.data.email);
         });
 
-        it("should return 201 and create user with mandatory params and displayName", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 201 and create user with mandatory params and displayName", async () => {
+            testUserData.data.displayName = "John Doe";
+            
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('uid');
+            expect(res.body).to.have.property('userAuthObject');
+
+            testUserUid = res.body.uid; // also needed for test teardown;
+            
+            const userRecord = await auth.getUser(testUserUid);
+            expect(userRecord).to.exist;
+            expect(userRecord.uid).to.equal(testUserUid);
+            expect(userRecord.email).to.equal(testUserData.data.email);
+            expect(userRecord.displayName).to.equal(testUserData.data.displayName);
         });
 
-        it("should return 201 and create user with mandatory params and photoURL", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 201 and create user with mandatory params and photoURL", async () => {
+            testUserData.data.photoURL = "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg";
+            
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('uid');
+            expect(res.body).to.have.property('userAuthObject');
+
+            testUserUid = res.body.uid; // also needed for test teardown;
+            
+            const userRecord = await auth.getUser(testUserUid);
+            expect(userRecord).to.exist;
+            expect(userRecord.uid).to.equal(testUserUid);
+            expect(userRecord.email).to.equal(testUserData.data.email);
+            expect(userRecord.photoURL).to.equal(testUserData.data.photoURL);
         });
 
-        it("should return 201 and create user with mandatory params and displayName and photoURL", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 201 and create user with mandatory params and displayName and photoURL", async () => {
+            testUserData.data.displayName = "John Doe";
+            testUserData.data.photoURL = "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg";
+            
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('uid');
+            expect(res.body).to.have.property('userAuthObject');
+
+            testUserUid = res.body.uid; // also needed for test teardown;
+            
+            const userRecord = await auth.getUser(testUserUid);
+            expect(userRecord).to.exist;
+            expect(userRecord.uid).to.equal(testUserUid);
+            expect(userRecord.email).to.equal(testUserData.data.email);
+            expect(userRecord.displayName).to.equal(testUserData.data.displayName);
+            expect(userRecord.photoURL).to.equal(testUserData.data.photoURL);
         });
 
-        it("should return 400 if payload missing mandatory param email", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if payload missing mandatory param email", async () => {
+            delete testUserData.data.email;
+
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload missing mandatory param password", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if payload missing mandatory param password", async () => {
+            delete testUserData.data.password;
+
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload missing mandatory params email and password", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 400 if payload missing mandatory params email and password", async () => {
+            delete testUserData.data.email;
+            delete testUserData.data.password;
+
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData);
+
+            expect(res.status).to.equal(400);
         });
 
         it("should return 400 if content-type is not application/json", async () => {
@@ -83,7 +169,7 @@ exports.createUserIntTest = function () {
             const res = await request(app)
                 .patch('/createUser')
                 .set('Content-Type', 'application/json')
-                .send(testUserData)
+                .send(testUserData);
 
             expect(res.status).to.equal(405);
         });
