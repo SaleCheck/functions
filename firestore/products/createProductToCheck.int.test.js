@@ -68,6 +68,48 @@ exports.createProductToCheckIntTest = function () {
             expect(docSnap.data().createdTimestamp).to.be.an.instanceOf(admin.firestore.Timestamp);
             expect(docSnap.data().lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
+        
+        it("should ignore keys in payload not allowed in productsFirestoreStructureConfig and return 201", async () => {
+            const invalidFields = {
+                "invalidKey1": "value1",
+                "invalidKey2": 12345,
+                "invalidKey3": { nested: "object" }
+            };
+
+            const testProductDataWithInvalids = {
+                data: {
+                    ...testProductData.data,
+                    ...invalidFields
+                }
+            };
+
+            const res = await request(app)
+                .post('/createProductToCheck')
+                .set('Content-Type', 'application/json')
+                .send(testProductDataWithInvalids);
+
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('message', 'Product added successfully');
+            expect(res.body).to.have.property('documentId');
+
+            testProductId = res.body.documentId; // also needed for test teardown;
+            const updatedDocSnap = await db.collection("productsToCheck").doc(testProductId).get();
+            const updatedDocData = updatedDocSnap.data();
+
+            for (const key of Object.keys(testProductDataWithInvalids.data)) {
+                if (ALLOWED_FIELDS.includes(key)) {
+                    expect(updatedDocData).to.have.property(key);
+                    expect(updatedDocData[key]).to.deep.equal(testProductDataWithInvalids.data[key]);
+                } else if (!(ALLOWED_FIELDS.includes(key))) {
+                    expect(updatedDocData).to.not.have.property(key);
+                } else {
+                    throw new Error(`Unexpected key ${key} encountered while validating created product data`);
+                }
+            }
+
+            expect(updatedDocData).to.have.property('createdTimestamp');
+            expect(updatedDocData).to.have.property('lastUpdated');
+        });
 
         it("should return 400 if content-type is not application/json", async () => {
             const res = await request(app)
@@ -110,48 +152,6 @@ exports.createProductToCheckIntTest = function () {
                 .send(testProductData);
 
             expect(res.status).to.equal(405);
-        });
-
-        it("should ignore keys in payload not allowed in productsFirestoreStructureConfig", async () => {
-            const invalidFields = {
-                "invalidKey1": "value1",
-                "invalidKey2": 12345,
-                "invalidKey3": { nested: "object" }
-            };
-
-            const testProductDataWithInvalids = {
-                data: {
-                    ...testProductData.data,
-                    ...invalidFields
-                }
-            };
-
-            const res = await request(app)
-                .post('/createProductToCheck')
-                .set('Content-Type', 'application/json')
-                .send(testProductDataWithInvalids);
-
-            expect(res.status).to.equal(200);
-            expect(res.body).to.have.property('message', 'Product added successfully');
-            expect(res.body).to.have.property('documentId');
-
-            testProductId = res.body.documentId; // also needed for test teardown;
-            const updatedDocSnap = await db.collection("productsToCheck").doc(testProductId).get();
-            const updatedDocData = updatedDocSnap.data();
-
-            for (const key of Object.keys(testProductDataWithInvalids.data)) {
-                if (ALLOWED_FIELDS.includes(key)) {
-                    expect(updatedDocData).to.have.property(key);
-                    expect(updatedDocData[key]).to.deep.equal(testProductDataWithInvalids.data[key]);
-                } else if (!(ALLOWED_FIELDS.includes(key))) {
-                    expect(updatedDocData).to.not.have.property(key);
-                } else {
-                    throw new Error(`Unexpected key ${key} encountered while validating created product data`);
-                }
-            }
-
-            expect(updatedDocData).to.have.property('createdTimestamp');
-            expect(updatedDocData).to.have.property('lastUpdated');
         });
 
         it("should return 500 if serverside fails", function () {
