@@ -16,10 +16,8 @@ exports.createUser = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async (r
             return res.status(400).send({ success: false, error: 'Content-Type must be application/json.' });
         }
 
-        const { email, pwd, displayName, photoURL } = req.body.data;
-        if (!email || !pwd) {
-            return res.status(400).send({ error: 'Bad Request: Email and password are required' });
-        }
+        const { email, password, displayName, photoURL } = req.body.data;
+        if (!email || !password) return res.status(400).send({ error: 'Bad Request: Email and password are required' });
 
         const auth = getAuth();
         if (process.env.FUNCTIONS_EMULATOR === 'true') {
@@ -44,7 +42,7 @@ exports.createUser = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async (r
                 photoURL: photoURL || '',
             })
 
-            return res.status(201).send({ status: "Success", user: user });
+            return res.status(201).send({ status: "Success", uid: user.uid, userAuthObject: user });
 
         } catch (error) {
             console.error("Error creating user: ", error);

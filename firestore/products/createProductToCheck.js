@@ -33,7 +33,7 @@ exports.createProductToCheck = onRequest({ timeoutSeconds: 300, memory: "1GiB" }
 
             // Add the filtered data to Firestore
             const docRef = await db.collection("productsToCheck").add(filteredData);
-            res.status(200).send({ message: "Product added successfully", documentId: docRef.id });
+            res.status(201).send({ message: "Product added successfully", documentId: docRef.id });
 
         } catch (error) {
             console.error("Error adding document: ", error);

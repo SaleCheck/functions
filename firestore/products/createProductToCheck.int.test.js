@@ -44,13 +44,13 @@ exports.createProductToCheckIntTest = function () {
             expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
         });
 
-        it("should return 200 if product successfully created", async () => {
+        it("should return 201 if product successfully created", async () => {
             const res = await request(app)
                 .post('/createProductToCheck')
                 .set('Content-Type', 'application/json')
                 .send(testProductData);
 
-            expect(res.status).to.equal(200);
+            expect(res.status).to.equal(201);
             expect(res.body).to.have.property('message', 'Product added successfully');
             expect(res.body).to.have.property('documentId');
 
