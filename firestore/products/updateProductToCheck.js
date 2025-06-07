@@ -37,7 +37,7 @@ exports.updateProductToCheck = onRequest(async (req, res) => {
             }
         } catch (error) {
             console.error("Error updating product:", error);
-            res.status(500).send("Internal Server Error");
+            res.status(500).send({ status: 'Internal Server Error', error: error });
         }
     })
 });

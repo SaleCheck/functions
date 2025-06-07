@@ -37,7 +37,7 @@ exports.createProductToCheck = onRequest({ timeoutSeconds: 300, memory: "1GiB" }
 
         } catch (error) {
             console.error("Error adding document: ", error);
-            res.status(500).send("Internal Server Error");
+            res.status(500).send({ status: 'Internal Server Error', error: error });
         }
     })
 });
