@@ -87,7 +87,7 @@ exports.updateProductToCheckIntTest = function () {
             expect(updatedDocData.lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
 
-        it("should skip fields not in productsFirestoreStructureConfig", async () => {
+        it("should skip fields not in productsFirestoreStructureConfig and return 200", async () => {
             updTestProductData.data.updateData.unknownField1 = "ShouldNotBeSaved";
             updTestProductData.data.updateData.anotherInvalidField = "12345";
 
@@ -119,9 +119,9 @@ exports.updateProductToCheckIntTest = function () {
             expect(updatedDocData.lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
 
-        it("should return 400 if param id param is missing from payload", async () => {
+        it("should return 400 if id param is missing from payload", async () => {
             delete updTestProductData.data.id;
-            updTestProductData.data.product = testProductId;     
+            updTestProductData.data.product = testProductId;
 
             const res = await request(app)
                 .patch('/updateProductToCheck')

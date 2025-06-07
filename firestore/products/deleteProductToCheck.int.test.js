@@ -80,7 +80,7 @@ exports.deleteProductToCheckIntTest = function () {
             expect(exists).to.be.false;
         });
 
-        it("should return 400 if param id param is missing from payload", async () => {
+        it("should return 400 if id param is missing from payload", async () => {
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')

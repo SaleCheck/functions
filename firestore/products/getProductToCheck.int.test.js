@@ -54,7 +54,7 @@ exports.getProductToCheckIntTest = function () {
       expect(res.body).to.deep.equal(testProductData)
     });
 
-    it("should return 400 if param id param is missing from payload", async () => {
+    it("should return 400 if id param is missing from payload", async () => {
       const res = await request(app)
         .get('/getProductToCheck')
         .query({ product: testProductId })
