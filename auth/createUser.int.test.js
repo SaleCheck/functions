@@ -1,0 +1,96 @@
+const { getAuth } = require('firebase-admin/auth');
+const { expect } = require('chai');
+const request = require('supertest');
+const express = require('express');
+const { createUser } = require('./createUser');
+
+const auth = getAuth();
+
+const app = express();
+app.use(express.json());
+app.use('/createUser', createUser);
+
+exports.createUserIntTest = function () {
+    describe('POST /createUser', () => {
+        let testUserUid;
+        const testUserData = {
+            "data": {
+                "email": "integration.test.user@mailinator.com",
+                "password": "123456",
+                "photoURL": "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            }
+        };
+
+        after(async () => {
+            if (testUserUid) auth.deleteUser(testUserUid);
+        });
+
+        it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
+            const res = await request(app)
+                .options('/createUser')
+                .set('Origin', 'http://example.com');
+
+            expect(res.status).to.be.oneOf([200, 204]);
+            expect(res.headers).to.have.property('access-control-allow-origin');
+            expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
+        });
+
+        it("should return 201 and create user with only mandatory params", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 201 and create user with mandatory params and displayName", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 201 and create user with mandatory params and photoURL", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 201 and create user with mandatory params and displayName and photoURL", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 400 if payload missing mandatory param email", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 400 if payload missing mandatory param password", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 400 if payload missing mandatory params email and password", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+
+        it("should return 400 if content-type is not application/json", async () => {
+            const res = await request(app)
+                .post('/createUser')
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send(testUserData);
+
+            expect(res.status).to.equal(400);
+        });
+
+        it("should return 405 if req method is not POST", async () => {
+            const res = await request(app)
+                .patch('/createUser')
+                .set('Content-Type', 'application/json')
+                .send(testUserData)
+
+            expect(res.status).to.equal(405);
+        });
+
+        it("should return 500 if serverside fails", function () {
+            console.warn("⚠️ Still TBA:");
+            this.skip();
+        });
+    });
+};

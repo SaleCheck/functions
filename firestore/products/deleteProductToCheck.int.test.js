@@ -46,7 +46,6 @@ exports.deleteProductToCheckIntTest = function () {
             }
         });
 
-
         it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
             const res = await request(app)
                 .options('/deleteProductToCheck')
@@ -58,11 +57,10 @@ exports.deleteProductToCheckIntTest = function () {
         });
 
         it('should return 200 and delete from collection in Firestore', async () => {
-            const deletePayload = { "data": { "id": testProductId } };
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(deletePayload);
+                .send({ "data": { "id": testProductId } });
 
             expect(res.status).to.equal(200);
 
@@ -71,11 +69,10 @@ exports.deleteProductToCheckIntTest = function () {
         });
 
         it('should return 200 and delete associated files from Storage', async () => {
-            const deletePayload = { "data": { "id": testProductId } };
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(deletePayload);
+                .send({ "data": { "id": testProductId } });
 
             expect(res.status).to.equal(200);
 
@@ -84,41 +81,37 @@ exports.deleteProductToCheckIntTest = function () {
         });
 
         it("should return 400 if param id param is missing from payload", async () => {
-            const deletePayload = { "data": { "product": testProductId } };
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(deletePayload);
+                .send({ "data": { "product": testProductId } });
 
             expect(res.status).to.equal(400);
         });
 
         it("should return 400 if content-type is not application/json", async () => {
-            const deletePayload = { "data": { "id": testProductId } };
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send(deletePayload);
+                .send({ "data": { "id": testProductId } });
 
             expect(res.status).to.equal(400);
         });
 
         it("should return 404 if product does not exist", async () => {
-            const deletePayload = { "data": { "id": 'nonexistent-id-123456' } };
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(deletePayload);
+                .send({ "data": { "id": 'nonexistent-id-123456' } });
 
             expect(res.status).to.equal(404);
         });
 
         it("should return 405 if req method is not DELETE", async () => {
-            const deletePayload = { "data": { "id": testProductId } };
             const res = await request(app)
                 .post('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send(deletePayload);
+                .send({ "data": { "id": testProductId } });
 
             expect(res.status).to.equal(405);
         });

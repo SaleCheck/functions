@@ -30,7 +30,7 @@ exports.createUser = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async (r
         }
 
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, pwd);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
             await sendEmailVerification(auth.currentUser);

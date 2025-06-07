@@ -25,8 +25,12 @@ exports.deleteUser = onRequest(async (req, res) => {
             await getAuth().deleteUser(uid);
             res.status(200).send({ success: true, message: "User deleted successfully." });
         } catch (error) {
-            console.error("Error deleting user:", error);
-            res.status(500).send({ success: false, error: "Internal Server Error", details: error.message });
+            if (error.code === 'auth/user-not-found') {
+                res.status(404).send({ success: false, error: "User not found." });
+            } else {
+                console.error("Error deleting user:", error);
+                res.status(500).send({ success: false, status: 'Internal Server Error', details: error });
+            }
         }
     });
 });

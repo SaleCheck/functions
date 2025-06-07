@@ -20,11 +20,15 @@ const { getProductToCheckIntTest } = require('./firestore/products/getProductToC
 const { updateProductToCheckIntTest } = require('./firestore/products/updateProductToCheck.int.test');
 const { deleteProductToCheckIntTest } = require('./firestore/products/deleteProductToCheck.int.test');
 
+const { createUserIntTest } = require('./auth/createUser.int.test');
 const { getUserIntTest } = require('./auth/getUser.int.test');
+const { deleteUserIntTest } = require('./auth/deleteUser.int.test');
 
 createProductToCheckIntTest();
 getProductToCheckIntTest();
 updateProductToCheckIntTest();
 deleteProductToCheckIntTest();
 
+createUserIntTest();
 getUserIntTest();
+deleteUserIntTest();
