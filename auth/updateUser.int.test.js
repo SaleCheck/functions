@@ -60,7 +60,7 @@ exports.updateUserIntTest = function () {
             expect(userRecord.photoURL).to.equal(updTestUserData.updateData.photoUrl);            
         });
 
-        it("should return 400 if uid param is missing from payload", async () => {
+        it("should return 400 if payload missing mandatory param uid", async () => {
             delete testUserData.uid;
 
             const res = await request(app)
@@ -71,7 +71,7 @@ exports.updateUserIntTest = function () {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if updateData param is missing from payload", async () => {
+        it("should return 400 if payload missing mandatory param updateData", async () => {
             delete testUserData.updateData;
 
             const res = await request(app)
@@ -82,7 +82,7 @@ exports.updateUserIntTest = function () {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if uid and updateData param are missing from payload", async () => {
+        it("should return 400 if payload missing mandatory params uid and updateData", async () => {
             delete testUserData.uid;
             delete testUserData.updateData;
 
