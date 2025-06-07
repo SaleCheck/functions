@@ -2,17 +2,6 @@ const { onRequest } = require("firebase-functions/v2/https");
 const { getAuth } = require("firebase-admin/auth");
 const cors = require('cors')({ origin: true });
 
-if (process.env.FUNCTIONS_EMULATOR === 'true') {
-    console.log('Active emulator instance detected. Connecting to Auth emulator ...');
-    try {
-        process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
-        console.log('... Auth emulator connection successfully established');
-    } catch {
-        console.error('Failed to connect to Auth emulator:', err);
-        throw new Error('Failed to connect to Auth emulator');
-    }
-}
-
 exports.getUser = onRequest(async (req, res) => {
     cors(req, res, async () => {
         if (req.method !== "GET") return res.status(405).send({ success: false, error: 'Method Not Allowed. Only GET requests are allowed.' });
