@@ -3,6 +3,7 @@ const { getStorage } = require("firebase-admin/storage");
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
+const sinon = require('sinon');
 const { deleteProductToCheck } = require('./deleteProductToCheck');
 
 const db = getFirestore();
@@ -116,9 +117,26 @@ exports.deleteProductToCheckIntTest = function () {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 500 if serverside fails", async () => {
+            const docStub = { get: sinon.stub().rejects(new Error('Simulated server error')) };
+            const collectionStub = sinon.stub(db, 'collection').returns({
+                doc: sinon.stub().returns(docStub),
+            });
+            const consoleErrorStub = sinon.stub(console, 'error');
+
+            try {
+                const res = await request(app)
+                    .delete('/deleteProductToCheck')
+                    .set('Content-Type', 'application/json')
+                    .send({ "data": { "id": testProductId } });
+
+                expect(res.status).to.equal(500);
+                expect(res.body).to.have.property('status', 'Internal Server Error');
+                expect(res.body).to.have.property('error');
+            } finally {
+                collectionStub.restore();
+                consoleErrorStub.restore();
+            }
         });
     });
 }

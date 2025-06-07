@@ -2,6 +2,7 @@ const { getAuth } = require('firebase-admin/auth');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
+const sinon = require('sinon');
 const { updateUser } = require('./updateUser');
 
 const auth = getAuth();
@@ -123,9 +124,24 @@ exports.updateUserIntTest = function () {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 500 if serverside fails", async () => {
+            // Stub getAuth().updateUser() to return a rejected Promise simulating async failure
+            const getAuthStub = sinon.stub(getAuth(), 'updateUser').rejects(new Error('Simulated server error'));
+            const consoleErrorStub = sinon.stub(console, 'error');
+
+            try {
+                const res = await request(app)
+                    .patch('/updateUser')
+                    .set('Content-Type', 'application/json')
+                    .send(updTestUserData);
+
+                expect(res.status).to.equal(500);
+                expect(res.body).to.have.property('status', 'Internal Server Error');
+                expect(res.body).to.have.property('error');
+            } finally {
+                getAuthStub.restore();
+                consoleErrorStub.restore();
+            }
         });
     });
 };

@@ -3,6 +3,7 @@ const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
+const sinon = require('sinon');
 const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
 const { createProductToCheck } = require('./createProductToCheck');
 
@@ -68,7 +69,7 @@ exports.createProductToCheckIntTest = function () {
             expect(docSnap.data().createdTimestamp).to.be.an.instanceOf(admin.firestore.Timestamp);
             expect(docSnap.data().lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
-        
+
         it("should ignore keys in payload not allowed in productsFirestoreStructureConfig and return 201", async () => {
             const invalidFields = {
                 "invalidKey1": "value1",
@@ -154,9 +155,26 @@ exports.createProductToCheckIntTest = function () {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 500 if serverside fails", async () => {
+            // Stub Firestore add method to return a rejected Promise simulating async failure
+            const collectionRef = db.collection('productsToCheck');
+            const CollectionReference = collectionRef.constructor;
+            const addStub = sinon.stub(CollectionReference.prototype, 'add').rejects(new Error('Simulated server error'));
+            const consoleErrorStub = sinon.stub(console, 'error');
+
+            try {
+                const res = await request(app)
+                    .post('/createProductToCheck')
+                    .set('Content-Type', 'application/json')
+                    .send(testProductData);
+
+                expect(res.status).to.equal(500);
+                expect(res.body).to.have.property('status', 'Internal Server Error')
+                expect(res.body).to.have.property('error');
+            } finally {
+                addStub.restore();
+                consoleErrorStub.restore();
+            }
         });
     });
 };

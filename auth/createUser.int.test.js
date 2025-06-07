@@ -2,7 +2,7 @@ const { getAuth } = require('firebase-admin/auth');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
-const cors = require('cors');
+const sinon = require('sinon');
 const { createUser } = require('./createUser');
 
 const auth = getAuth();
@@ -50,7 +50,7 @@ exports.createUserIntTest = function () {
             expect(res.body).to.have.property('userAuthObject');
 
             testUserUid = res.body.uid; // also needed for test teardown;
-            
+
             const userRecord = await auth.getUser(testUserUid);
             expect(userRecord).to.exist;
             expect(userRecord.uid).to.equal(testUserUid);
@@ -59,7 +59,7 @@ exports.createUserIntTest = function () {
 
         it("should return 201 and create user with mandatory params and displayName", async () => {
             testUserData.data.displayName = "John Doe";
-            
+
             const res = await request(app)
                 .post('/createUser')
                 .set('Content-Type', 'application/json')
@@ -70,7 +70,7 @@ exports.createUserIntTest = function () {
             expect(res.body).to.have.property('userAuthObject');
 
             testUserUid = res.body.uid; // also needed for test teardown;
-            
+
             const userRecord = await auth.getUser(testUserUid);
             expect(userRecord).to.exist;
             expect(userRecord.uid).to.equal(testUserUid);
@@ -80,7 +80,7 @@ exports.createUserIntTest = function () {
 
         it("should return 201 and create user with mandatory params and photoURL", async () => {
             testUserData.data.photoURL = "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg";
-            
+
             const res = await request(app)
                 .post('/createUser')
                 .set('Content-Type', 'application/json')
@@ -91,7 +91,7 @@ exports.createUserIntTest = function () {
             expect(res.body).to.have.property('userAuthObject');
 
             testUserUid = res.body.uid; // also needed for test teardown;
-            
+
             const userRecord = await auth.getUser(testUserUid);
             expect(userRecord).to.exist;
             expect(userRecord.uid).to.equal(testUserUid);
@@ -102,7 +102,7 @@ exports.createUserIntTest = function () {
         it("should return 201 and create user with mandatory params and displayName and photoURL", async () => {
             testUserData.data.displayName = "John Doe";
             testUserData.data.photoURL = "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg";
-            
+
             const res = await request(app)
                 .post('/createUser')
                 .set('Content-Type', 'application/json')
@@ -113,7 +113,7 @@ exports.createUserIntTest = function () {
             expect(res.body).to.have.property('userAuthObject');
 
             testUserUid = res.body.uid; // also needed for test teardown;
-            
+
             const userRecord = await auth.getUser(testUserUid);
             expect(userRecord).to.exist;
             expect(userRecord.uid).to.equal(testUserUid);
@@ -174,9 +174,24 @@ exports.createUserIntTest = function () {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", function () {
-            console.warn("⚠️ Still TBA:");
-            this.skip();
+        it("should return 500 if serverside fails", async () => {
+            // Stub getAuth().createUser() to return a rejected Promise simulating async failure
+            const getAuthStub = sinon.stub(getAuth(), 'createUser').rejects(new Error('Simulated server error'));
+            const consoleErrorStub = sinon.stub(console, 'error');
+
+            try {
+                const res = await request(app)
+                    .post('/createUser')
+                    .set('Content-Type', 'application/json')
+                    .send(testUserData);
+
+                expect(res.status).to.equal(500);
+                expect(res.body).to.have.property('status', 'Internal Server Error');
+                expect(res.body).to.have.property('error');
+            } finally {
+                getAuthStub.restore();
+                consoleErrorStub.restore();
+            }
         });
     });
 };

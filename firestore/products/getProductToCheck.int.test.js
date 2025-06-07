@@ -2,6 +2,7 @@ const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
+const sinon = require('sinon');
 const { getProductToCheck } = require('./getProductToCheck');
 
 const db = getFirestore();
@@ -37,7 +38,7 @@ exports.getProductToCheckIntTest = function () {
 
     it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
       const res = await request(app)
-        .options('/getProductToCheck')     
+        .options('/getProductToCheck')
         .set('Origin', 'http://example.com');
 
       expect(res.status).to.be.oneOf([200, 204]);
@@ -78,9 +79,26 @@ exports.getProductToCheckIntTest = function () {
       expect(res.status).to.equal(405);
     });
 
-    it("should return 500 if serverside fails", function () {
-      console.warn("⚠️ Still TBA:");
-      this.skip();
+    it("should return 500 if serverside fails", async () => {
+      // Stub Firestore doc().get() to throw
+      const docStub = { get: sinon.stub().rejects(new Error('Simulated server error')) };
+      const collectionStub = sinon.stub(db, 'collection').returns({
+        doc: sinon.stub().returns(docStub),
+      });
+      const consoleErrorStub = sinon.stub(console, 'error');
+
+      try {
+        const res = await request(app)
+          .get('/getProductToCheck')
+          .query({ id: testProductId });
+
+        expect(res.status).to.equal(500);
+        expect(res.body).to.have.property('status', 'Internal Server Error');
+        expect(res.body).to.have.property('error');
+      } finally {
+        collectionStub.restore();
+        consoleErrorStub.restore();
+      }
     });
   });
 };
