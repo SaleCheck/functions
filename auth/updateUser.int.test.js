@@ -1,4 +1,5 @@
 const { getAuth } = require('firebase-admin/auth');
+const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
@@ -6,6 +7,7 @@ const sinon = require('sinon');
 const { updateUser } = require('./updateUser');
 
 const auth = getAuth();
+const db = getFirestore();
 
 const app = express();
 app.use(express.json());
@@ -33,7 +35,19 @@ exports.updateUserIntTest = () => {
         });
 
         afterEach(async () => {
-            if (testUserUid) auth.deleteUser(testUserUid);
+            if (testUserUid) {
+                await auth.getUser(testUserUid)
+                    .then(() => auth.deleteUser(testUserUid))
+                    .catch(error => {
+                        if (error.code !== 'auth/user-not-found') throw error;
+                    });
+
+                try {
+                    await db.collection('users').doc(testUserUid).delete();
+                } catch (firestoreError) {
+                    console.warn(`Failed to delete Firestore doc: ${firestoreError.message}`);
+                }
+            }
         });
 
         it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
