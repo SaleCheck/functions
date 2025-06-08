@@ -31,7 +31,7 @@ exports.createProductToCheckIntTest = () => {
             }
         };
 
-        after(async () => {
+        afterEach(async () => {
             if (testProductId) await db.collection("productsToCheck").doc(testProductId).delete();
         });
 
