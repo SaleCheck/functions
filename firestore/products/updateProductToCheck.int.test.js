@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use('/updateProductToCheck', updateProductToCheck);
 
-exports.updateProductToCheckIntTest = function () {
+exports.updateProductToCheckIntTest = () => {
     describe('PATCH /updateProductToCheck', () => {
         let testProductId;
         const testProductData = {

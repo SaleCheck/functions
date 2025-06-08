@@ -10,7 +10,7 @@ const auth = getAuth();
 const app = express();
 app.use('/getUser', getUser);
 
-exports.getUserIntTest = function () {
+exports.getUserIntTest = () => {
     describe('GET /getUser', () => {
         let testUserUid;
         const testUserData = {

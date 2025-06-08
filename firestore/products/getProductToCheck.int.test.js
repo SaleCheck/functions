@@ -7,11 +7,10 @@ const { getProductToCheck } = require('./getProductToCheck');
 
 const db = getFirestore();
 
-
 const app = express();
 app.use('/getProductToCheck', getProductToCheck);
 
-exports.getProductToCheckIntTest = function () {
+exports.getProductToCheckIntTest = () => {
   describe('GET /getProductToCheck', () => {
     let testProductId;
     const testProductData = {

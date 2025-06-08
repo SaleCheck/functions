@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use('/createProductToCheck', createProductToCheck);
 
-exports.createProductToCheckIntTest = function () {
+exports.createProductToCheckIntTest = () => {
     describe('POST /createProductToCheck', () => {
         let testProductId;
         const testProductData = {

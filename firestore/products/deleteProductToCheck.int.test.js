@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use('/deleteProductToCheck', deleteProductToCheck);
 
-exports.deleteProductToCheckIntTest = function () {
+exports.deleteProductToCheckIntTest = () => {
     describe('DELETE /deleteProductToCheck', () => {
         let testProductId;
         let storageFilePath;

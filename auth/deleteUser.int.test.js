@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use('/deleteUser', deleteUser);
 
-exports.deleteUserIntTest = function () {
+exports.deleteUserIntTest = () => {
     describe('DELETE /deleteUser', () => {
         let testUserUid;
         const testUserData = {

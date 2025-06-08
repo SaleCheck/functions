@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use('/updateUser', updateUser);
 
-exports.updateUserIntTest = function () {
+exports.updateUserIntTest = () => {
     describe('PATCH /updateUser', () => {
         let testUserUid;
         const testUserData = {

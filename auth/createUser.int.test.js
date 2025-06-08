@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use('/createUser', createUser);
 
-exports.createUserIntTest = function () {
+exports.createUserIntTest = () => {
     describe('POST /createUser', () => {
         let testUserUid;
         let testUserData;
