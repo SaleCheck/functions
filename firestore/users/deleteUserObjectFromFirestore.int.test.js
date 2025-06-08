@@ -7,8 +7,10 @@ const auth = getAuth();
 const db = getFirestore();
 const storage = getStorage();
 
-exports.deleteUserObjectFromFirestoreIntTest = function () {
-    describe('deleteUserObjectFromFirestore', () => {
+exports.deleteUserObjectFromFirestoreIntTest =  () => {
+    describe('deleteUserObjectFromFirestore', function () {
+        this.timeout(5000);
+
         let testUserUid;
         const testUserData = {
             disabled: false,
@@ -48,9 +50,7 @@ exports.deleteUserObjectFromFirestoreIntTest = function () {
             }
         });
 
-        it('should delete user from collection in Firestore and avatar in Storage', async function () {
-            this.timeout(5000);
-
+        it('should delete user from collection in Firestore and avatar in Storage', async () => {
             await auth.deleteUser(testUserUid);
             await new Promise((resolve) => setTimeout(resolve, 2000)); // Set target for completion time of deleteUserObjectFromFirestore
 
@@ -62,5 +62,56 @@ exports.deleteUserObjectFromFirestoreIntTest = function () {
             const [exists] = await file.exists();
             expect(exists).to.be.false;
         })
+
+        it('should handle user document not existing gracefully', async () => {
+            // Delete user document before deleting user account
+            await db.collection('users').doc(testUserUid).delete();
+
+            await auth.deleteUser(testUserUid);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            const userDoc = await db.collection('users').doc(testUserUid).get();
+            expect(userDoc.exists).to.be.false;
+
+            const bucket = storage.bucket();
+            const file = bucket.file(storageFilePath);
+            const [exists] = await file.exists();
+            expect(exists).to.be.false;
+        });
+
+        it('should handle no avatar files in storage gracefully', async () => {
+            // Delete avatar file before deleting user account
+            const bucket = storage.bucket();
+            const file = bucket.file(storageFilePath);
+            await file.delete();
+
+            await auth.deleteUser(testUserUid);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            const userDoc = await db.collection('users').doc(testUserUid).get();
+            expect(userDoc.exists).to.be.false;
+
+            const [exists] = await file.exists();
+            expect(exists).to.be.false;
+        });
+
+        it('should delete all avatar files if multiple exist', async () => {
+            const bucket = storage.bucket();
+            const file1 = bucket.file(`users/avatar/${testUserUid}/${testUserUid}.png`);
+            const file2 = bucket.file(`users/avatar/${testUserUid}/extra-file.png`);
+            const buffer = Buffer.from("Extra file");
+            await file2.save(buffer, { contentType: 'image/png' });
+
+            await auth.deleteUser(testUserUid);
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+
+            const userDoc = await db.collection('users').doc(testUserUid).get();
+            expect(userDoc.exists).to.be.false;
+
+            const [exists1] = await file1.exists();
+            const [exists2] = await file2.exists();
+            expect(exists1).to.be.false;
+            expect(exists2).to.be.false;
+        });
     });
 };
