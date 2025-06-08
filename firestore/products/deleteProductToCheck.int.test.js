@@ -18,12 +18,12 @@ exports.deleteProductToCheckIntTest = () => {
         let testProductId;
         let storageFilePath;
         const testProductData = {
-            "productName": "productForDeletion",
-            "expectedPrice": 29.99,
-            "expectedPriceCurrency": "USD",
-            "url": "http: //example.com/product",
-            "cssSelector": ".product-price",
-            "user": "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
+            productName: "productForDeletion",
+            expectedPrice: 29.99,
+            expectedPriceCurrency: "USD",
+            url: "http: //example.com/product",
+            cssSelector: ".product-price",
+            user: "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
         };
 
         beforeEach(async () => {
@@ -61,7 +61,7 @@ exports.deleteProductToCheckIntTest = () => {
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send({ "data": { "id": testProductId } });
+                .send({ data: { id: testProductId } });
 
             expect(res.status).to.equal(200);
 
@@ -73,7 +73,7 @@ exports.deleteProductToCheckIntTest = () => {
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send({ "data": { "id": testProductId } });
+                .send({ data: { id: testProductId } });
 
             expect(res.status).to.equal(200);
 
@@ -85,7 +85,7 @@ exports.deleteProductToCheckIntTest = () => {
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send({ "data": { "product": testProductId } });
+                .send({ data: { product: testProductId } });
 
             expect(res.status).to.equal(400);
         });
@@ -94,7 +94,7 @@ exports.deleteProductToCheckIntTest = () => {
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send({ "data": { "id": testProductId } });
+                .send({ data: { id: testProductId } });
 
             expect(res.status).to.equal(400);
         });
@@ -103,7 +103,7 @@ exports.deleteProductToCheckIntTest = () => {
             const res = await request(app)
                 .delete('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send({ "data": { "id": 'nonexistent-id-123456' } });
+                .send({ data: { id: 'nonexistent-id-123456' } });
 
             expect(res.status).to.equal(404);
         });
@@ -112,7 +112,7 @@ exports.deleteProductToCheckIntTest = () => {
             const res = await request(app)
                 .post('/deleteProductToCheck')
                 .set('Content-Type', 'application/json')
-                .send({ "data": { "id": testProductId } });
+                .send({ data: { id: testProductId } });
 
             expect(res.status).to.equal(405);
         });
@@ -128,7 +128,7 @@ exports.deleteProductToCheckIntTest = () => {
                 const res = await request(app)
                     .delete('/deleteProductToCheck')
                     .set('Content-Type', 'application/json')
-                    .send({ "data": { "id": testProductId } });
+                    .send({ data: { id: testProductId } });
 
                 expect(res.status).to.equal(500);
                 expect(res.body).to.have.property('status', 'Internal Server Error');

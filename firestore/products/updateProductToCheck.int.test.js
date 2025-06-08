@@ -17,34 +17,33 @@ exports.updateProductToCheckIntTest = () => {
     describe('PATCH /updateProductToCheck', () => {
         let testProductId;
         const testProductData = {
-            "productName": "ExampleProduct",
-            "expectedPrice": 29.99,
-            "expectedPriceCurrency": "USD",
-            "url": "http: //example.com/product",
-            "emailNotification": [
+            productName: "ExampleProduct",
+            expectedPrice: 29.99,
+            expectedPriceCurrency: "USD",
+            url: "http: //example.com/product",
+            emailNotification: [
                 "user1@example.com",
                 "user2@example.com"
             ],
-            "cssSelector": ".product-price",
-            "user": "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
+            cssSelector: ".product-price",
+            user: "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
         };
         const updTestProductData = {
-            "data": {
-                "id": testProductId,
-                "updateData": {
-                    "productName": "DifferentExampleProduct",
-                    "expectedPrice": 99.99,
-                    "expectedPriceCurrency": "INR",
-                    "url": "http://bipbop.com/bip",
-                    "emailNotification": [
+            data: {
+                id: testProductId,
+                updateData: {
+                    productName: "DifferentExampleProduct",
+                    expectedPrice: 99.99,
+                    expectedPriceCurrency: "INR",
+                    url: "http://bipbop.com/bip",
+                    emailNotification: [
                         "harry.potter@hogwarts.com",
                         "ron.weasley@hogwarts.com",
                         "hermione.granger@hogwarts.com"
                     ],
-                    "cssSelector": ".hogwarts-library",
-                    "user": "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
+                    cssSelector: ".hogwarts-library",
+                    user: "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
                 }
-
             }
         };
 

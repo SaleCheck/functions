@@ -17,17 +17,17 @@ exports.createProductToCheckIntTest = () => {
     describe('POST /createProductToCheck', () => {
         let testProductId;
         const testProductData = {
-            "data": {
-                "productName": "ExampleProduct",
-                "expectedPrice": 29.99,
-                "expectedPriceCurrency": "USD",
-                "url": "http: //example.com/product",
-                "emailNotification": [
+            data: {
+                productName: "ExampleProduct",
+                expectedPrice: 29.99,
+                expectedPriceCurrency: "USD",
+                url: "http: //example.com/product",
+                emailNotification: [
                     "user1@example.com",
                     "user2@example.com"
                 ],
-                "cssSelector": ".product-price",
-                "user": "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
+                cssSelector: ".product-price",
+                user: "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
             }
         };
 
@@ -72,9 +72,9 @@ exports.createProductToCheckIntTest = () => {
 
         it("should ignore keys in payload not allowed in productsFirestoreStructureConfig and return 201", async () => {
             const invalidFields = {
-                "invalidKey1": "value1",
-                "invalidKey2": 12345,
-                "invalidKey3": { nested: "object" }
+                invalidKey1: "value1",
+                invalidKey2: 12345,
+                invalidKey3: { nested: "object" }
             };
 
             const testProductDataWithInvalids = {

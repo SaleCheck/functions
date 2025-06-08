@@ -14,16 +14,16 @@ exports.getProductToCheckIntTest = () => {
   describe('GET /getProductToCheck', () => {
     let testProductId;
     const testProductData = {
-      "productName": "ExampleProduct",
-      "expectedPrice": 29.99,
-      "expectedPriceCurrency": "USD",
-      "url": "http: //example.com/product",
-      "emailNotification": [
+      productName: "ExampleProduct",
+      expectedPrice: 29.99,
+      expectedPriceCurrency: "USD",
+      url: "http: //example.com/product",
+      emailNotification: [
         "user1@example.com",
         "user2@example.com"
       ],
-      "cssSelector": ".product-price",
-      "user": "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
+      cssSelector: ".product-price",
+      user: "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
     };
 
     before(async () => {

@@ -14,9 +14,9 @@ exports.getUserIntTest = () => {
     describe('GET /getUser', () => {
         let testUserUid;
         const testUserData = {
-            "email": "integration.test.user@mailinator.com",
-            "password": "123456",
-            "photoURL": "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            email: "integration.test.user@mailinator.com",
+            password: "123456",
+            photoURL: "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
         };
 
         before(async () => {

@@ -15,14 +15,14 @@ exports.updateUserIntTest = () => {
     describe('PATCH /updateUser', () => {
         let testUserUid;
         const testUserData = {
-            "email": "integration.test.user@mailinator.com",
-            "password": "123456",
-            "photoURL": "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            email: "integration.test.user@mailinator.com",
+            password: "123456",
+            photoURL: "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
         };
         const updTestUserData = {
-            "uid": testUserUid,
-            "updateData": {
-                "photoUrl": "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740"
+            uid: testUserUid,
+            updateData: {
+                photoUrl: "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740"
             }
         };
 

@@ -18,9 +18,9 @@ exports.createUserIntTest = () => {
 
         beforeEach(async () => {
             testUserData = {
-                "data": {
-                    "email": "integration.test.user@mailinator.com",
-                    "password": "123456"
+                data: {
+                    email: "integration.test.user@mailinator.com",
+                    password: "123456"
                 }
             }
         });
