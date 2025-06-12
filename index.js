@@ -1,4 +1,5 @@
 require('dotenv').config();
+const admin = require('firebase-admin');
 const { initializeApp } = require('firebase/app');
 const { initializeApp: initializeAdminApp } = require("firebase-admin/app");
 
@@ -12,7 +13,7 @@ const firebaseConfig = {
     measurementId: process.env.MEASUREMENT_ID
 };
 initializeApp(firebaseConfig);
-initializeAdminApp();
+if (!admin.apps.length) initializeAdminApp();
 
 
 const {
