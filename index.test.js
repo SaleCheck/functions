@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+const { expect } = require('chai');
+
 const firebaseConfig = require('../firebase.json');
 if (firebaseConfig.emulators && firebaseConfig.emulators.firestore) process.env.FIRESTORE_EMULATOR_HOST = `localhost:${firebaseConfig.emulators.firestore.port}`;
 if (firebaseConfig.emulators && firebaseConfig.emulators.auth) process.env.FIREBASE_AUTH_EMULATOR_HOST = `localhost:${firebaseConfig.emulators.auth.port}`;
@@ -40,3 +44,28 @@ createUserIntTest();
 getUserIntTest();
 updateUserIntTest();
 deleteUserIntTest();
+
+
+describe('All exported functions in index.js have corresponding *IntTest in index.test.js', function () {
+    const indexExports = require('./index.js');
+    const testFilePath = path.join(__dirname, 'index.test.js');
+    const testFileContent = fs.readFileSync(testFilePath, 'utf-8');
+
+    /* Temporary additions - Configure functions allowed to skip test: */
+    const skipFunctions = [
+        'scrapeAndComparePricesOnRequest',
+        'scrapeAndComparePricesOnSchedule',
+        'onProductSaleCheckExecution',
+        'testPuppeteer'
+    ];
+    
+    Object.keys(indexExports).forEach((exportName) => {
+        if (skipFunctions.includes(exportName)) return; // <-- Temporary additions - Configure functions allowed to skip test
+        
+        const expectedTestFnName = `${exportName}IntTest`;
+        it(`should have ${expectedTestFnName} defined and called in index.test.js`, function () {
+            const isCalled = testFileContent.includes(`${expectedTestFnName}(`) || testFileContent.includes(`${expectedTestFnName}();`);
+            expect(isCalled, `${expectedTestFnName} is missing or not called`).to.be.true;
+        });
+    });
+});
