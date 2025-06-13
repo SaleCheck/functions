@@ -48,6 +48,8 @@ exports.copyUserObjectToFirestoreIntTest = () => {
 
             const userDoc = await db.collection('users').doc(user.uid).get();
             const userSnapshot = userDoc.data();
+            console.dir(userSnapshot, { depth: null, colors: true });
+            
 
             expect(userDoc.exists).to.be.true;
             expect(userSnapshot).to.include({
@@ -71,6 +73,8 @@ exports.copyUserObjectToFirestoreIntTest = () => {
 
             const doc = await db.collection('users').doc(user.uid).get();
             const data = doc.data();
+            console.dir(data, { depth: null, colors: true });
+            
 
             const created = data.createdOn.toMillis();
             const updated = data.lastUpdated.toMillis();
