@@ -1,7 +1,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { getFirestore, Timestamp } = require("firebase-admin/firestore");
 const cors = require('cors')({ origin: true });
-const { ALLOWED_FIELDS } = require("./productSchema");
+const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
 
 const db = getFirestore();
 
@@ -33,11 +33,11 @@ exports.createProductToCheck = onRequest({ timeoutSeconds: 300, memory: "1GiB" }
 
             // Add the filtered data to Firestore
             const docRef = await db.collection("productsToCheck").add(filteredData);
-            res.status(200).send({ message: "Product added successfully", documentId: docRef.id });
+            res.status(201).send({ message: "Product added successfully", documentId: docRef.id });
 
         } catch (error) {
             console.error("Error adding document: ", error);
-            res.status(500).send("Internal Server Error");
+            res.status(500).send({ status: 'Internal Server Error', error: error });
         }
     })
 });

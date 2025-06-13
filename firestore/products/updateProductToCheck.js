@@ -1,7 +1,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { getFirestore, Timestamp } = require("firebase-admin/firestore");
 const cors = require('cors')({ origin: true });
-const { ALLOWED_FIELDS } = require("./productSchema");
+const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
 
 const db = getFirestore();
 
@@ -37,7 +37,7 @@ exports.updateProductToCheck = onRequest(async (req, res) => {
             }
         } catch (error) {
             console.error("Error updating product:", error);
-            res.status(500).send("Internal Server Error");
+            res.status(500).send({ status: 'Internal Server Error', error: error });
         }
     })
 });
