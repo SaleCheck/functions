@@ -5,7 +5,7 @@ const admin = require('firebase-admin');
 
 const auth = getAuth();
 const db = getFirestore();
-const WAIT_MS = 1000;
+const WAIT_MS = 3000;
 
 exports.copyUserObjectToFirestoreIntTest = () => {
     describe('copyUserObjectToFirestore', function () {
