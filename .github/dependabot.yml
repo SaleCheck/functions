@@ -37,4 +37,7 @@ updates:
       all-dependencies:
         patterns:
           - "*"               # match all dependencies
-        update-types: ["all"] # include patch, minor, and major updates
+        update-types: 
+          - patch
+          - minor
+          - major
