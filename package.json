@@ -16,7 +16,7 @@
   "main": "index.js",
   "dependencies": {
     "@google-cloud/scheduler": "^4.3.0",
-    "axios": "^1.11.0",
+    "axios": "^1.12.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "firebase": "^11.4.0",
