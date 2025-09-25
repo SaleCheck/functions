@@ -3,6 +3,8 @@
 # → Security
 # → Advanced Security
 
+# Below does nothing (because open-pull-requests-limit: 0)
+# Required for action triggered not to fail
 version: 2
 updates:
   - package-ecosystem: "github-actions"
