@@ -17,6 +17,7 @@ updates:
     commit-message:
       prefix: "fix"
       include: "scope"
+    security-updates-only: true
     # Group changes in PR together for 1 PR:
     groups:
       all-dependencies:
