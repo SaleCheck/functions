@@ -32,3 +32,9 @@ updates:
     commit-message:
       prefix: "fix"
       include: "scope"
+    # Group changes in PR together for 1 PR:
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"               # match all dependencies
+        update-types: ["all"] # include patch, minor, and major updates
