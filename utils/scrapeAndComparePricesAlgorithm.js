@@ -24,9 +24,7 @@ async function scrapeAndComparePricesAlgorithm() {
         let browser;
     
         try {
-            browser = await puppeteer.launch({
-                headless: true
-            });
+            browser = await puppeteer.launch({ headless: true });
             const page = await browser.newPage();
             await page.goto(productUrl, { waitUntil: 'domcontentloaded' });
     
