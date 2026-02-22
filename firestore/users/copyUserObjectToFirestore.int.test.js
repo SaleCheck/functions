@@ -1,5 +1,5 @@
 const { getAuth } = require('firebase-admin/auth');
-const { getFirestore, Timestamp } = require('firebase-admin/firestore');
+const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const admin = require('firebase-admin');
 
@@ -27,13 +27,6 @@ exports.copyUserObjectToFirestoreIntTest = () => {
             testUserUid = user.uid;
             await new Promise(resolve => setTimeout(resolve, WAIT_MS));
             return user;
-        }
-
-        async function deleteTestUserAndDoc(uid) {
-            if (uid) {
-                await auth.deleteUser(uid);
-                await db.collection('users').doc(uid).delete();
-            }
         }
 
         afterEach(async () => {

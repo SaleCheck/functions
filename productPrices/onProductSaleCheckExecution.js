@@ -1,7 +1,6 @@
 require('firebase-functions/logger/compat');
 const functions = require('firebase-functions');
 const { getFirestore, Timestamp } = require('firebase-admin/firestore');
-const admin = require('firebase-admin');
 const { sendEmail } = require('../utils/emailService');
 
 const db = getFirestore();
@@ -9,7 +8,6 @@ const db = getFirestore();
 exports.onProductSaleCheckExecution = functions.firestore
     .document('productsToCheck/{productId}/executions/{executionId}')
     .onCreate(async (snap, context) => {
-        let emailTo = process.env.EMAILUSER;
 
         try {
             const executionRef = snap.ref;
