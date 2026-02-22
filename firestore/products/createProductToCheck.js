@@ -1,20 +1,20 @@
-const { onRequest } = require("firebase-functions/v2/https");
-const { getFirestore, Timestamp } = require("firebase-admin/firestore");
+const { onRequest } = require('firebase-functions/v2/https');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 const cors = require('cors')({ origin: true });
-const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
+const ALLOWED_FIELDS = require('./config/productsFirestoreStructureConfig.json');
 
 const db = getFirestore();
 
-exports.createProductToCheck = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async (req, res) => {
+exports.createProductToCheck = onRequest({ timeoutSeconds: 300, memory: '1GiB' }, async (req, res) => {
     cors(req, res, async () => {
-        if (req.method !== "POST") return res.status(405).send({ success: false, error: 'Method Not Allowed. Only POST requests are allowed.' });
+        if (req.method !== 'POST') return res.status(405).send({ success: false, error: 'Method Not Allowed. Only POST requests are allowed.' });
         if (req.get('Content-Type') !== 'application/json') {
             return res.status(400).send({ success: false, error: 'Content-Type must be application/json.' });
         }
 
         try {
             const data = req.body.data;
-            if (!data) return res.status(400).send("Bad Request: No data in payload provided");
+            if (!data) return res.status(400).send('Bad Request: No data in payload provided');
 
             for (const key of ALLOWED_FIELDS) {
                 if (!data.hasOwnProperty(key)) {
@@ -32,11 +32,11 @@ exports.createProductToCheck = onRequest({ timeoutSeconds: 300, memory: "1GiB" }
             filteredData.lastUpdated = Timestamp.now();
 
             // Add the filtered data to Firestore
-            const docRef = await db.collection("productsToCheck").add(filteredData);
-            res.status(201).send({ message: "Product added successfully", documentId: docRef.id });
+            const docRef = await db.collection('productsToCheck').add(filteredData);
+            res.status(201).send({ message: 'Product added successfully', documentId: docRef.id });
 
         } catch (error) {
-            console.error("Error adding document: ", error);
+            console.error('Error adding document: ', error);
             res.status(500).send({ status: 'Internal Server Error', error: error });
         }
     })

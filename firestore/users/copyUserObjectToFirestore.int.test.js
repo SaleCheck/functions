@@ -15,11 +15,11 @@ exports.copyUserObjectToFirestoreIntTest = () => {
         const defaultUserData = {
             disabled: false,
             displayName: 'Test User',
-            email: "integration.test.user@mailinator.com",
+            email: 'integration.test.user@mailinator.com',
             emailVerified: false,
-            password: "123456",
-            phoneNumber: "+1234567890",
-            photoURL: "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            password: '123456',
+            phoneNumber: '+1234567890',
+            photoURL: 'https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg'
         };
 
         async function createTestUser(overrides = {}) {

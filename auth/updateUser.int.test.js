@@ -17,14 +17,14 @@ exports.updateUserIntTest = () => {
     describe('PATCH /updateUser', () => {
         let testUserUid;
         const testUserData = {
-            email: "integration.test.user@mailinator.com",
-            password: "123456",
-            photoURL: "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            email: 'integration.test.user@mailinator.com',
+            password: '123456',
+            photoURL: 'https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg'
         };
         const updTestUserData = {
             uid: testUserUid,
             updateData: {
-                photoUrl: "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740"
+                photoUrl: 'https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740'
             }
         };
 
@@ -50,7 +50,7 @@ exports.updateUserIntTest = () => {
             }
         });
 
-        it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
+        it('should handle OPTIONS preflight request with appropriate CORS headers', async () => {
             const res = await request(app)
                 .options('/updateUser')
                 .set('Origin', 'http://example.com');
@@ -60,7 +60,7 @@ exports.updateUserIntTest = () => {
             expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
         });
 
-        it("should return 200 if user is updated successfully", async () => {
+        it('should return 200 if user is updated successfully', async () => {
             const res = await request(app)
                 .patch('/updateUser')
                 .set('Content-Type', 'application/json')
@@ -75,7 +75,7 @@ exports.updateUserIntTest = () => {
             expect(userRecord.photoURL).to.equal(updTestUserData.updateData.photoUrl);
         });
 
-        it("should return 400 if payload missing mandatory param uid", async () => {
+        it('should return 400 if payload missing mandatory param uid', async () => {
             delete testUserData.uid;
 
             const res = await request(app)
@@ -86,7 +86,7 @@ exports.updateUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload missing mandatory param updateData", async () => {
+        it('should return 400 if payload missing mandatory param updateData', async () => {
             delete testUserData.updateData;
 
             const res = await request(app)
@@ -97,7 +97,7 @@ exports.updateUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload missing mandatory params uid and updateData", async () => {
+        it('should return 400 if payload missing mandatory params uid and updateData', async () => {
             delete testUserData.uid;
             delete testUserData.updateData;
 
@@ -109,7 +109,7 @@ exports.updateUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if content-type is not application/json", async () => {
+        it('should return 400 if content-type is not application/json', async () => {
             const res = await request(app)
                 .patch('/updateUser')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -118,7 +118,7 @@ exports.updateUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 404 if user does not exist ", async () => {
+        it('should return 404 if user does not exist ', async () => {
             updTestUserData.uid = 'nonexistent-id-123456';
 
             const res = await request(app)
@@ -129,7 +129,7 @@ exports.updateUserIntTest = () => {
             expect(res.status).to.equal(404);
         });
 
-        it("should return 405 if req method is not PATCH", async () => {
+        it('should return 405 if req method is not PATCH', async () => {
             const res = await request(app)
                 .post('/updateUser')
                 .set('Content-Type', 'application/json')
@@ -138,7 +138,7 @@ exports.updateUserIntTest = () => {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", async () => {
+        it('should return 500 if serverside fails', async () => {
             // Stub getAuth().updateUser() to return a rejected Promise simulating async failure
             const getAuthStub = sinon.stub(getAuth(), 'updateUser').rejects(new Error('Simulated server error'));
             const consoleErrorStub = sinon.stub(console, 'error');

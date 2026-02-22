@@ -1,13 +1,13 @@
-const { onRequest } = require("firebase-functions/v2/https");
+const { onRequest } = require('firebase-functions/v2/https');
 const puppeteer = require('puppeteer');
 const cors = require('cors')({ origin: true });
 
-exports.testPuppeteer = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async (req, res) => {
+exports.testPuppeteer = onRequest({ timeoutSeconds: 300, memory: '1GiB' }, async (req, res) => {
     cors(req, res, async () => {
         const productUrl = req.query.productUrl || req.body.productUrl;
         const cssSelector = req.query.cssSelector || req.body.cssSelector;
 
-        if (req.method !== "POST") return res.status(405).send({ success: false, error: 'Method Not Allowed. Only POST requests are allowed.' });
+        if (req.method !== 'POST') return res.status(405).send({ success: false, error: 'Method Not Allowed. Only POST requests are allowed.' });
         if (!productUrl || !cssSelector) return res.status(400).send('Missing productUrl or cssSelector parameter');
 
         let browser;
@@ -25,7 +25,7 @@ exports.testPuppeteer = onRequest({ timeoutSeconds: 300, memory: "1GiB" }, async
             const rawPrice = productPrices[0];
             const priceNumber = parseFloat(rawPrice.replace(/[^\d,.-]/g, '').replace(',', '.')); // Keep only digits, commas, periods, and minus signs.
 
-            res.send("Found price(s): " + String(priceNumber));
+            res.send('Found price(s): ' + String(priceNumber));
         
         } catch (error) {
             console.error('Error scraping prices:', error);

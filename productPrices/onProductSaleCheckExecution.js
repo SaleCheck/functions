@@ -89,7 +89,7 @@ exports.onProductSaleCheckExecution = functions.firestore
                 }
 
             } catch (error) {
-                console.error("Error during Firestore trigger execution: ", error);
+                console.error('Error during Firestore trigger execution: ', error);
                 if (emailTo) {
                     const errorMailOptions = {
                         from: process.env.EMAILUSER,
@@ -99,7 +99,7 @@ exports.onProductSaleCheckExecution = functions.firestore
                             <p>
                                 An error occurred during the execution of SaleChecker.
                                 <br><br>
-                                <strong>Error Details:</strong> ${error.message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+                                <strong>Error Details:</strong> ${error.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
                                 <br><br>
                                 Please check the function logs for more details.
                                 <br><br>
@@ -123,7 +123,7 @@ exports.onProductSaleCheckExecution = functions.firestore
                         <br><br>
                         An unexpected error occurred during the execution of the SaleChecker service.
                         <br><br>
-                        <strong>Error Details:</strong> ${error.message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+                        <strong>Error Details:</strong> ${error.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
                         <br><br>
                         This issue needs immediate attention as it might impact the proper functioning of the service.
                         <br><br>

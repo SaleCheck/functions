@@ -1,6 +1,6 @@
 const { getAuth } = require('firebase-admin/auth');
 const { getFirestore } = require('firebase-admin/firestore');
-const { getStorage } = require("firebase-admin/storage");
+const { getStorage } = require('firebase-admin/storage');
 const { expect } = require('chai');
 
 const auth = getAuth();
@@ -15,11 +15,11 @@ exports.deleteUserObjectFromFirestoreIntTest =  () => {
         const testUserData = {
             disabled: false,
             displayName: 'Test User',
-            email: "integration.test.user@mailinator.com",
+            email: 'integration.test.user@mailinator.com',
             emailVerified: false,
-            password: "123456",
-            phoneNumber: "+1234567890",
-            photoURL: "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            password: '123456',
+            phoneNumber: '+1234567890',
+            photoURL: 'https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg'
         };
 
         beforeEach(async () => {
@@ -28,7 +28,7 @@ exports.deleteUserObjectFromFirestoreIntTest =  () => {
 
             const bucket = storage.bucket();
             storageFilePath = `/users/avatar/${testUserUid}/${testUserUid}.png`;
-            const buffer = Buffer.from("This is a test file for deletion.");
+            const buffer = Buffer.from('This is a test file for deletion.');
             const file = bucket.file(storageFilePath);
             await file.save(buffer, { contentType: 'image/png', });
 
@@ -99,7 +99,7 @@ exports.deleteUserObjectFromFirestoreIntTest =  () => {
             const bucket = storage.bucket();
             const file1 = bucket.file(`users/avatar/${testUserUid}/${testUserUid}.png`);
             const file2 = bucket.file(`users/avatar/${testUserUid}/extra-file.png`);
-            const buffer = Buffer.from("Extra file");
+            const buffer = Buffer.from('Extra file');
             await file2.save(buffer, { contentType: 'image/png' });
 
             await auth.deleteUser(testUserUid);

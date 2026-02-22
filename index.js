@@ -1,7 +1,7 @@
 require('dotenv').config();
 const admin = require('firebase-admin');
 const { initializeApp } = require('firebase/app');
-const { initializeApp: initializeAdminApp } = require("firebase-admin/app");
+const { initializeApp: initializeAdminApp } = require('firebase-admin/app');
 
 const firebaseConfig = {
     apiKey: process.env.API_KEY,

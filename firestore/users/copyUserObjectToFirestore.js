@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const { Timestamp } = require("firebase-admin/firestore");
+const { Timestamp } = require('firebase-admin/firestore');
 
 const db = admin.firestore();
 

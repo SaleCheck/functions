@@ -17,9 +17,9 @@ exports.deleteUserIntTest = () => {
     describe('DELETE /deleteUser', () => {
         let testUserUid;
         const testUserData = {
-            "email": "integration.test.user@mailinator.com",
-            "password": "123456",
-            "photoURL": "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg"
+            'email': 'integration.test.user@mailinator.com',
+            'password': '123456',
+            'photoURL': 'https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg'
         };
 
         before(async () => {
@@ -43,7 +43,7 @@ exports.deleteUserIntTest = () => {
             }
         });
 
-        it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
+        it('should handle OPTIONS preflight request with appropriate CORS headers', async () => {
             const res = await request(app)
                 .options('/deleteUser')
                 .set('Origin', 'http://example.com');
@@ -57,37 +57,37 @@ exports.deleteUserIntTest = () => {
             const res = await request(app)
                 .delete('/deleteUser')
                 .set('Content-Type', 'application/json')
-                .send({ "uid": testUserUid });
+                .send({ 'uid': testUserUid });
 
             expect(res.status).to.equal(200);
 
             try {
                 const userExists = await auth.getUser(testUserUid);
-                if (userExists) throw new Error("User still exists after supposed deletion");
+                if (userExists) throw new Error('User still exists after supposed deletion');
             } catch (err) {
                 expect(err.code).to.equal('auth/user-not-found');
             }
         });
 
-        it("should return 400 if uid param is missing from payload", async () => {
+        it('should return 400 if uid param is missing from payload', async () => {
             const res = await request(app)
                 .delete('/deleteUser')
                 .set('Content-Type', 'application/json')
-                .send({ email: "integration.test.user@mailinator.com" });
+                .send({ email: 'integration.test.user@mailinator.com' });
 
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if content-type is not application/json", async () => {
+        it('should return 400 if content-type is not application/json', async () => {
             const res = await request(app)
                 .delete('/deleteUser')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send({ "uid": testUserUid });
+                .send({ 'uid': testUserUid });
 
             expect(res.status).to.equal(400);
         });
 
-        it("should return 404 if user does not exist ", async () => {
+        it('should return 404 if user does not exist ', async () => {
             const res = await request(app)
                 .delete('/deleteUser')
                 .send({ uid: 'nonexistent-id-123456' })
@@ -95,7 +95,7 @@ exports.deleteUserIntTest = () => {
             expect(res.status).to.equal(404);
         });
 
-        it("should return 405 if req method is not DELETE", async () => {
+        it('should return 405 if req method is not DELETE', async () => {
             const res = await request(app)
                 .post('/deleteUser')
                 .query({ uid: testUserUid })
@@ -103,7 +103,7 @@ exports.deleteUserIntTest = () => {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", async () => {
+        it('should return 500 if serverside fails', async () => {
             // Stub getAuth().deleteUser() to return a rejected Promise simulating async failure
             const getAuthStub = sinon.stub(getAuth(), 'deleteUser').rejects(new Error('Simulated server error'));
             const consoleErrorStub = sinon.stub(console, 'error');
@@ -112,7 +112,7 @@ exports.deleteUserIntTest = () => {
                 const res = await request(app)
                     .delete('/deleteUser')
                     .set('Content-Type', 'application/json')
-                    .send({ "uid": testUserUid });
+                    .send({ 'uid': testUserUid });
 
                 expect(res.status).to.equal(500);
                 expect(res.body).to.have.property('status', 'Internal Server Error');

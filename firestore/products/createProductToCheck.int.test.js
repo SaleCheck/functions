@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const request = require('supertest');
 const express = require('express');
 const sinon = require('sinon');
-const ALLOWED_FIELDS = require("./config/productsFirestoreStructureConfig.json");
+const ALLOWED_FIELDS = require('./config/productsFirestoreStructureConfig.json');
 const { createProductToCheck } = require('./createProductToCheck');
 
 const db = getFirestore();
@@ -18,24 +18,24 @@ exports.createProductToCheckIntTest = () => {
         let testProductId;
         const testProductData = {
             data: {
-                productName: "ExampleProduct",
+                productName: 'ExampleProduct',
                 expectedPrice: 29.99,
-                expectedPriceCurrency: "USD",
-                url: "http: //example.com/product",
+                expectedPriceCurrency: 'USD',
+                url: 'http: //example.com/product',
                 emailNotification: [
-                    "user1@example.com",
-                    "user2@example.com"
+                    'user1@example.com',
+                    'user2@example.com'
                 ],
-                cssSelector: ".product-price",
-                user: "YlGEGBCRfBV6o3TIUrTqvcdMxMi2"
+                cssSelector: '.product-price',
+                user: 'YlGEGBCRfBV6o3TIUrTqvcdMxMi2'
             }
         };
 
         afterEach(async () => {
-            if (testProductId) await db.collection("productsToCheck").doc(testProductId).delete();
+            if (testProductId) await db.collection('productsToCheck').doc(testProductId).delete();
         });
 
-        it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
+        it('should handle OPTIONS preflight request with appropriate CORS headers', async () => {
             const res = await request(app)
                 .options('/createProductToCheck')
                 .set('Origin', 'http://example.com');
@@ -45,7 +45,7 @@ exports.createProductToCheckIntTest = () => {
             expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
         });
 
-        it("should return 201 if product successfully created", async () => {
+        it('should return 201 if product successfully created', async () => {
             const res = await request(app)
                 .post('/createProductToCheck')
                 .set('Content-Type', 'application/json')
@@ -56,7 +56,7 @@ exports.createProductToCheckIntTest = () => {
             expect(res.body).to.have.property('documentId');
 
             testProductId = res.body.documentId; // also needed for test teardown;
-            const docRef = db.collection("productsToCheck").doc(testProductId);
+            const docRef = db.collection('productsToCheck').doc(testProductId);
             const docSnap = await docRef.get();
 
             expect(docSnap.exists).to.be.true;
@@ -70,11 +70,11 @@ exports.createProductToCheckIntTest = () => {
             expect(docSnap.data().lastUpdated).to.be.an.instanceOf(admin.firestore.Timestamp);
         });
 
-        it("should ignore keys in payload not allowed in productsFirestoreStructureConfig and return 201", async () => {
+        it('should ignore keys in payload not allowed in productsFirestoreStructureConfig and return 201', async () => {
             const invalidFields = {
-                invalidKey1: "value1",
+                invalidKey1: 'value1',
                 invalidKey2: 12345,
-                invalidKey3: { nested: "object" }
+                invalidKey3: { nested: 'object' }
             };
 
             const testProductDataWithInvalids = {
@@ -94,7 +94,7 @@ exports.createProductToCheckIntTest = () => {
             expect(res.body).to.have.property('documentId');
 
             testProductId = res.body.documentId; // also needed for test teardown;
-            const updatedDocSnap = await db.collection("productsToCheck").doc(testProductId).get();
+            const updatedDocSnap = await db.collection('productsToCheck').doc(testProductId).get();
             const updatedDocData = updatedDocSnap.data();
 
             for (const key of Object.keys(testProductDataWithInvalids.data)) {
@@ -112,7 +112,7 @@ exports.createProductToCheckIntTest = () => {
             expect(updatedDocData).to.have.property('lastUpdated');
         });
 
-        it("should return 400 if content-type is not application/json", async () => {
+        it('should return 400 if content-type is not application/json', async () => {
             const res = await request(app)
                 .post('/createProductToCheck')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -121,7 +121,7 @@ exports.createProductToCheckIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload is empty", async () => {
+        it('should return 400 if payload is empty', async () => {
             const res = await request(app)
                 .post('/createProductToCheck')
                 .set('Content-Type', 'application/json')
@@ -130,7 +130,7 @@ exports.createProductToCheckIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload is missing any expected params", async () => {
+        it('should return 400 if payload is missing any expected params', async () => {
             for (const key of ALLOWED_FIELDS) {
                 const incompletePayload = JSON.parse(JSON.stringify(testProductData));
                 delete incompletePayload.data[key];
@@ -146,7 +146,7 @@ exports.createProductToCheckIntTest = () => {
             }
         });
 
-        it("should return 405 if req method is not POST", async () => {
+        it('should return 405 if req method is not POST', async () => {
             const res = await request(app)
                 .get('/createProductToCheck')
                 .set('Content-Type', 'application/json')
@@ -155,7 +155,7 @@ exports.createProductToCheckIntTest = () => {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", async () => {
+        it('should return 500 if serverside fails', async () => {
             // Stub Firestore add method to return a rejected Promise simulating async failure
             const collectionRef = db.collection('productsToCheck');
             const CollectionReference = collectionRef.constructor;

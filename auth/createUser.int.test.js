@@ -21,8 +21,8 @@ exports.createUserIntTest = () => {
         beforeEach(async () => {
             testUserData = {
                 data: {
-                    email: "integration.test.user@mailinator.com",
-                    password: "123456"
+                    email: 'integration.test.user@mailinator.com',
+                    password: '123456'
                 }
             }
         });
@@ -43,7 +43,7 @@ exports.createUserIntTest = () => {
             }
         });
 
-        it("should handle OPTIONS preflight request with appropriate CORS headers", async () => {
+        it('should handle OPTIONS preflight request with appropriate CORS headers', async () => {
             const res = await request(app)
                 .options('/createUser')
                 .set('Origin', 'http://example.com');
@@ -53,7 +53,7 @@ exports.createUserIntTest = () => {
             expect(res.headers['access-control-allow-origin']).to.equal('http://example.com');
         });
 
-        it("should return 201 and create user with only mandatory params", async () => {
+        it('should return 201 and create user with only mandatory params', async () => {
             const res = await request(app)
                 .post('/createUser')
                 .set('Content-Type', 'application/json')
@@ -71,8 +71,8 @@ exports.createUserIntTest = () => {
             expect(userRecord.email).to.equal(testUserData.data.email);
         });
 
-        it("should return 201 and create user with mandatory params and displayName", async () => {
-            testUserData.data.displayName = "John Doe";
+        it('should return 201 and create user with mandatory params and displayName', async () => {
+            testUserData.data.displayName = 'John Doe';
 
             const res = await request(app)
                 .post('/createUser')
@@ -92,8 +92,8 @@ exports.createUserIntTest = () => {
             expect(userRecord.displayName).to.equal(testUserData.data.displayName);
         });
 
-        it("should return 201 and create user with mandatory params and photoURL", async () => {
-            testUserData.data.photoURL = "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg";
+        it('should return 201 and create user with mandatory params and photoURL', async () => {
+            testUserData.data.photoURL = 'https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg';
 
             const res = await request(app)
                 .post('/createUser')
@@ -113,9 +113,9 @@ exports.createUserIntTest = () => {
             expect(userRecord.photoURL).to.equal(testUserData.data.photoURL);
         });
 
-        it("should return 201 and create user with mandatory params and displayName and photoURL", async () => {
-            testUserData.data.displayName = "John Doe";
-            testUserData.data.photoURL = "https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg";
+        it('should return 201 and create user with mandatory params and displayName and photoURL', async () => {
+            testUserData.data.displayName = 'John Doe';
+            testUserData.data.photoURL = 'https://i.pinimg.com/1200x/95/f2/dc/95f2dcf5f17c59125547cc391a15f48e.jpg';
 
             const res = await request(app)
                 .post('/createUser')
@@ -136,7 +136,7 @@ exports.createUserIntTest = () => {
             expect(userRecord.photoURL).to.equal(testUserData.data.photoURL);
         });
 
-        it("should return 400 if payload missing mandatory param email", async () => {
+        it('should return 400 if payload missing mandatory param email', async () => {
             delete testUserData.data.email;
 
             const res = await request(app)
@@ -147,7 +147,7 @@ exports.createUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload missing mandatory param password", async () => {
+        it('should return 400 if payload missing mandatory param password', async () => {
             delete testUserData.data.password;
 
             const res = await request(app)
@@ -158,7 +158,7 @@ exports.createUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if payload missing mandatory params email and password", async () => {
+        it('should return 400 if payload missing mandatory params email and password', async () => {
             delete testUserData.data.email;
             delete testUserData.data.password;
 
@@ -170,7 +170,7 @@ exports.createUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 400 if content-type is not application/json", async () => {
+        it('should return 400 if content-type is not application/json', async () => {
             const res = await request(app)
                 .post('/createUser')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -179,7 +179,7 @@ exports.createUserIntTest = () => {
             expect(res.status).to.equal(400);
         });
 
-        it("should return 405 if req method is not POST", async () => {
+        it('should return 405 if req method is not POST', async () => {
             const res = await request(app)
                 .patch('/createUser')
                 .set('Content-Type', 'application/json')
@@ -188,7 +188,7 @@ exports.createUserIntTest = () => {
             expect(res.status).to.equal(405);
         });
 
-        it("should return 500 if serverside fails", async () => {
+        it('should return 500 if serverside fails', async () => {
             // Stub getAuth().createUser() to return a rejected Promise simulating async failure
             const getAuthStub = sinon.stub(getAuth(), 'createUser').rejects(new Error('Simulated server error'));
             const consoleErrorStub = sinon.stub(console, 'error');

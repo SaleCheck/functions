@@ -1,4 +1,4 @@
 module.exports = {
-    require: ["dotenv/config"],
-    ignore: ["node_modules/**"],
+    require: ['dotenv/config'],
+    ignore: ['node_modules/**'],
 }

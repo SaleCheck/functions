@@ -1,5 +1,5 @@
-const { getFirestore, Timestamp } = require("firebase-admin/firestore");
-const puppeteer = require("puppeteer");
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
+const puppeteer = require('puppeteer');
 
 const db = getFirestore();
 
