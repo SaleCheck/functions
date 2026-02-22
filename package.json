@@ -1,7 +1,6 @@
 {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
-  "type": "module",
   "scripts": {
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -30,6 +29,7 @@
     "chai": "^5.2.0",
     "cross-env": "^7.0.3",
     "eslint": "^10.0.1",
+    "globals": "^17.3.0",
     "mocha": "^11.3.0",
     "sinon": "^21.0.1",
     "supertest": "^7.1.1"
