@@ -1,5 +1,5 @@
 require('firebase-functions/logger/compat');
-const functions = require('firebase-functions');
+const functions = require('firebase-functions/v1'); 
 const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 const { sendEmail } = require('../utils/emailService');
 

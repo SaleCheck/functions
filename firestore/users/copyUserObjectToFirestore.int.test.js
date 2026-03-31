@@ -2,10 +2,10 @@ const { getAuth } = require('firebase-admin/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const admin = require('firebase-admin');
+const { copyUserToFirestore } = require('./copyUserObjectToFirestore');
 
 const auth = getAuth();
 const db = getFirestore();
-const WAIT_MS = 3000;
 
 exports.copyUserObjectToFirestoreIntTest = () => {
     describe('copyUserObjectToFirestore', function () {
@@ -25,7 +25,6 @@ exports.copyUserObjectToFirestoreIntTest = () => {
         async function createTestUser(overrides = {}) {
             const user = await auth.createUser({ ...defaultUserData, ...overrides });
             testUserUid = user.uid;
-            await new Promise(resolve => setTimeout(resolve, WAIT_MS));
             return user;
         }
 
@@ -38,6 +37,8 @@ exports.copyUserObjectToFirestoreIntTest = () => {
 
         it('should copy new auth user to Firestore users collection', async () => {
             const user = await createTestUser();
+
+            await copyUserToFirestore(user);
 
             const userDoc = await db.collection('users').doc(user.uid).get();
             const userSnapshot = userDoc.data();
@@ -60,6 +61,9 @@ exports.copyUserObjectToFirestoreIntTest = () => {
         it('should have timestamps close to user creation time', async () => {
             const startTime = Date.now();
             const user = await createTestUser();
+
+            await copyUserToFirestore(user);
+
             const endTime = Date.now();
 
             const doc = await db.collection('users').doc(user.uid).get();
@@ -79,6 +83,8 @@ exports.copyUserObjectToFirestoreIntTest = () => {
                 photoURL: undefined
             });
 
+            await copyUserToFirestore(user);
+
             const userDoc = await db.collection('users').doc(user.uid).get();
             const userSnapshot = userDoc.data();
 
@@ -93,6 +99,8 @@ exports.copyUserObjectToFirestoreIntTest = () => {
                 email: 'edge.case.user@mailinator.com',
                 phoneNumber: '+10000000001'
             });
+
+            await copyUserToFirestore(user);
 
             const doc = await db.collection('users').doc(user.uid).get();
             expect(doc.exists).to.be.true;
