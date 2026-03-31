@@ -4,9 +4,7 @@ const { Timestamp } = require('firebase-admin/firestore');
 
 const db = admin.firestore();
 
-exports.copyUserObjectToFirestore = functions.auth.user().onCreate( async (user) => {
-    console.log('User created:', user, '\n Copying user object to Firestore ...');    
-    
+async function copyUserToFirestore(user) {
     const userData = {
         createdOn: Timestamp.now() ?? null,
         disabled: user.disabled ?? null,
@@ -19,13 +17,19 @@ exports.copyUserObjectToFirestore = functions.auth.user().onCreate( async (user)
         phoneNumber: user.phoneNumber ?? null,
         photoURL: user.photoURL ?? null,
         uid: user.uid ?? null,
-    }
-    
-    try {
-        const docRef = db.collection('users').doc(user.uid);
-        await docRef.set(userData);        
-        console.log('User object copied to Firestore:', userData);
-    } catch (error) {
-        console.error(`Error copying user object for uid ${uid} to Firestore:`, error);
-    }
+    };
+
+    const docRef = db.collection('users').doc(user.uid);
+    await docRef.set(userData);
+
+    return userData;
+}
+
+// Firebase trigger (thin wrapper)
+exports.copyUserObjectToFirestore = functions.auth.user().onCreate(async (user) => {
+    console.log('User created:', user.uid);
+    return copyUserToFirestore(user);
 });
+
+// Export for testing
+module.exports.copyUserToFirestore = copyUserToFirestore;
