@@ -4,9 +4,6 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
 
-/**
- * Pure function (testable)
- */
 async function deleteUserData(user) {
     const userId = user.uid;
 
@@ -23,9 +20,7 @@ async function deleteUserData(user) {
     }
 }
 
-/**
- * Firebase trigger (thin wrapper)
- */
+// Firebase trigger (thin wrapper)
 exports.deleteUserObjectFromFirestore = functions.auth.user().onDelete(async (user) => {
     console.log('User deleted:', user.uid);
     try {
@@ -35,7 +30,5 @@ exports.deleteUserObjectFromFirestore = functions.auth.user().onDelete(async (us
     }
 });
 
-/**
- * Export for tests
- */
+// Export for testing
 exports._test = { deleteUserData };

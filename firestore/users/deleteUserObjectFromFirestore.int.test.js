@@ -2,8 +2,6 @@ const { getAuth } = require('firebase-admin/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const { getStorage } = require('firebase-admin/storage');
 const { expect } = require('chai');
-
-// 👇 Import pure function
 const { _test } = require('./deleteUserObjectFromFirestore');
 
 const auth = getAuth();
