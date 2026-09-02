@@ -58,9 +58,8 @@ async function runSaleCheckerAlgorithm() {
 };
 
 // Scheduled execution for Google Cloud Scheduler
-
 exports.scrapeAndComparePricesOnSchedule = onSchedule({
-    schedule: '0 7 * * 1,3,5',
+    schedule: '0 7 * * 5',
     timeZone: 'Europe/Paris',
     timeoutSeconds: 300,
     memory: '2GiB',
@@ -70,7 +69,7 @@ exports.scrapeAndComparePricesOnSchedule = onSchedule({
     //  7: Hour (7 AM)
     //  *: Day of the month (every day)
     //  *: Month (every month)
-    //  1,3,5: Days of the week (Monday, Wednesday, Friday)
+    //  5: Days of the week (Friday)
     // Timezone: ID in https://docs.sentinel.thalesgroup.com/softwareandservices/ems/EMSdocs/WSG/Content/TimeZone.htm
 
     console.log('Scheduled function triggered.');
