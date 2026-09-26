@@ -1,9 +1,9 @@
 [
-    "cssSelector",
-    "emailNotification",
-    "expectedPrice",
-    "expectedPriceCurrency",
-    "productName",
-    "url",
-    "user"
+  "cssSelector",
+  "emailNotification",
+  "expectedPrice",
+  "expectedPriceCurrency",
+  "productName",
+  "url",
+  "user"
 ]
