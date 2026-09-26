@@ -1,57 +1,64 @@
 require('firebase-functions/logger/compat');
-const functions = require('firebase-functions/v1'); 
+const functions = require('firebase-functions/v1');
 const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 const { sendEmail } = require('../utils/emailService');
 
 const db = getFirestore();
 
 exports.onProductSaleCheckExecution = functions.firestore
-    .document('productsToCheck/{productId}/executions/{executionId}')
-    .onCreate(async (snap, context) => {
+  .document('productsToCheck/{productId}/executions/{executionId}')
+  .onCreate(async (snap, context) => {
+    try {
+      const executionRef = snap.ref;
+      const executionData = snap.data();
+      const { productId } = context.params;
 
-        try {
-            const executionRef = snap.ref;
-            const executionData = snap.data();
-            const { productId } = context.params;
+      const productRef = db.collection('productsToCheck').doc(productId);
+      const snapshot = await productRef.get();
 
-            const productRef = db.collection('productsToCheck').doc(productId);
-            const snapshot = await productRef.get();
+      if (!snapshot.exists) {
+        console.error(`No product found for ID: ${productId}`);
+        return null;
+      }
 
-            if (!snapshot.exists) {
-                console.error(`No product found for ID: ${productId}`);
-                return null;
-            }
+      const {
+        productName,
+        expectedPrice: productExpectedPrice,
+        expectedPriceCurrency: productExpectedPriceCurrency,
+        url: productUrl,
+        emailNotification: emailTo,
+        imageUrl,
+      } = snapshot.data();
 
-            const {
-                productName,
-                expectedPrice: productExpectedPrice,
-                expectedPriceCurrency: productExpectedPriceCurrency,
-                url: productUrl,
-                emailNotification: emailTo,
-                imageUrl
-            } = snapshot.data();
+      try {
+        if (emailTo) {
+          const { foundPrice, samePriceAsExpected } = executionData;
+          if (
+            foundPrice == null ||
+            foundPrice == undefined ||
+            samePriceAsExpected == null ||
+            samePriceAsExpected == undefined
+          ) {
+            throw new Error(`No price found for product: ${productName}`);
+          }
 
-            try {
-                if (emailTo) {
-                    const { foundPrice, samePriceAsExpected } = executionData;
-                    if (foundPrice == null || foundPrice == undefined || samePriceAsExpected == null || samePriceAsExpected == undefined) {
-                        throw new Error(`No price found for product: ${productName}`);
-                    }
+          if (samePriceAsExpected && foundPrice === productExpectedPrice) {
+            console.log(
+              `Skipping email; No price change found for product ${productName}`
+            );
+            return null;
+          } else {
+            const discountPercentage = Math.round(
+              ((productExpectedPrice - foundPrice) / productExpectedPrice) * 100
+            );
 
-                    if (samePriceAsExpected && foundPrice === productExpectedPrice) {
-                        console.log(`Skipping email; No price change found for product ${productName}`);
-                        return null;
+            const imageHtml = imageUrl
+              ? `<br><img src="${imageUrl}" alt="${productName}" style="height: 300px; width: auto;">`
+              : '';
 
-                    } else {
-                        const discountPercentage = Math.round(((productExpectedPrice - foundPrice) / productExpectedPrice) * 100);
+            const emailSubject = `🚨ON SALE🤑: ${productName} Costs ${foundPrice} ${productExpectedPriceCurrency} Now!`;
 
-                        const imageHtml = imageUrl
-                            ? `<br><img src="${imageUrl}" alt="${productName}" style="height: 300px; width: auto;">`
-                            : '';
-
-                        const emailSubject = `🚨ON SALE🤑: ${productName} Costs ${foundPrice} ${productExpectedPriceCurrency} Now!`;
-
-                        const emailBody = `
+            const emailBody = `
                             <p>
                                 Hello!👋
                                 <br><br>
@@ -65,35 +72,34 @@ exports.onProductSaleCheckExecution = functions.firestore
                                 <br>– Team SaleChecker😻
                             </p>`;
 
-                        const mailOptions = {
-                            from: process.env.EMAILUSER,
-                            to: emailTo,
-                            subject: emailSubject,
-                            html: emailBody
-                        };
-                        await sendEmail(mailOptions);
+            const mailOptions = {
+              from: process.env.EMAILUSER,
+              to: emailTo,
+              subject: emailSubject,
+              html: emailBody,
+            };
+            await sendEmail(mailOptions);
 
-                        // Update Firestore document with email details
-                        await executionRef.update({
-                            emailStatus: {
-                                emailSent: true,
-                                emailSentBody: emailBody,
-                                emailSentOn: Timestamp.now(),
-                                emailSentSubject: emailSubject,
-                                emailSentTo: emailTo,
-                            }
-                        });
-                    }
-                }
-
-            } catch (error) {
-                console.error('Error during Firestore trigger execution: ', error);
-                if (emailTo) {
-                    const errorMailOptions = {
-                        from: process.env.EMAILUSER,
-                        to: emailTo,
-                        subject: `Error in SaleChecker Execution for ${productName}☹️`,
-                        html: `
+            // Update Firestore document with email details
+            await executionRef.update({
+              emailStatus: {
+                emailSent: true,
+                emailSentBody: emailBody,
+                emailSentOn: Timestamp.now(),
+                emailSentSubject: emailSubject,
+                emailSentTo: emailTo,
+              },
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error during Firestore trigger execution: ', error);
+        if (emailTo) {
+          const errorMailOptions = {
+            from: process.env.EMAILUSER,
+            to: emailTo,
+            subject: `Error in SaleChecker Execution for ${productName}☹️`,
+            html: `
                             <p>
                                 An error occurred during the execution of SaleChecker.
                                 <br><br>
@@ -103,19 +109,18 @@ exports.onProductSaleCheckExecution = functions.firestore
                                 <br><br>
                                 Kind regards,
                                 <br>– Team SaleChecker
-                            </p>`
-                    };
-                    await sendEmail(errorMailOptions);
-                }
-            };
-
-        } catch (error) {
-            console.error(`Error occured: ${error}`);
-            const criticalErrorMailOptions = {
-                from: process.env.EMAILUSER,
-                to: process.env.EMAILUSER, 
-                subject: `⚠️CRITICAL ERROR: SaleChecker Execution Failed Completely Failed`,
-                html: `
+                            </p>`,
+          };
+          await sendEmail(errorMailOptions);
+        }
+      }
+    } catch (error) {
+      console.error(`Error occured: ${error}`);
+      const criticalErrorMailOptions = {
+        from: process.env.EMAILUSER,
+        to: process.env.EMAILUSER,
+        subject: `⚠️CRITICAL ERROR: SaleChecker Execution Failed Completely Failed`,
+        html: `
                     <p>
                         <strong>Critical Error Occurred!</strong>
                         <br><br>
@@ -129,8 +134,8 @@ exports.onProductSaleCheckExecution = functions.firestore
                         <br><br>
                         Kind regards,
                         <br>– Team SaleChecker
-                    </p>`
-            };
-            await sendEmail(criticalErrorMailOptions);
-        }
-    });
+                    </p>`,
+      };
+      await sendEmail(criticalErrorMailOptions);
+    }
+  });

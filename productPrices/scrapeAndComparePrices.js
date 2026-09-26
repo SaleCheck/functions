@@ -5,14 +5,14 @@ const scrapeAndComparePricesAlgorithm = require('../utils/scrapeAndComparePrices
 const { sendEmail } = require('../utils/emailService');
 
 async function runSaleCheckerAlgorithm() {
-    console.log('Scraping algorithm triggered.');
-    
-    try {
-        await scrapeAndComparePricesAlgorithm();
-        console.log('Scraping and comparison algorithm completed successfully.');
+  console.log('Scraping algorithm triggered.');
 
-        const emailSubject = `SaleCheck Price Monitoring Ran Successfully`;
-        const emailBody = `
+  try {
+    await scrapeAndComparePricesAlgorithm();
+    console.log('Scraping and comparison algorithm completed successfully.');
+
+    const emailSubject = `SaleCheck Price Monitoring Ran Successfully`;
+    const emailBody = `
                 <p>
                     The SaleCheck price monitoring scheduler has successfully run today.
                     <br><br>
@@ -22,19 +22,18 @@ async function runSaleCheckerAlgorithm() {
                     <br>
                     – Team SaleChecker😻
                 </p>`;
-        const mailOptions = {
-            from: process.env.EMAILUSER,
-            to: process.env.EMAILUSER,
-            subject: emailSubject,
-            html: emailBody
-        };
-        await sendEmail(mailOptions);
+    const mailOptions = {
+      from: process.env.EMAILUSER,
+      to: process.env.EMAILUSER,
+      subject: emailSubject,
+      html: emailBody,
+    };
+    await sendEmail(mailOptions);
+  } catch (error) {
+    console.error('Error during scraping algorithm:', error);
 
-    } catch (error) {
-        console.error('Error during scraping algorithm:', error);
-
-        const emailSubject = `❗ERROR: SaleCheck Job Failed`;
-        const emailBody = `
+    const emailSubject = `❗ERROR: SaleCheck Job Failed`;
+    const emailBody = `
             <p>
                 The SaleCheck job encountered an error and did not complete successfully.
                 <br><br>
@@ -46,24 +45,26 @@ async function runSaleCheckerAlgorithm() {
                 Kind regards,  
             Team SaleChecker
             </p>`;
-        const mailOptions = {
-            from: process.env.EMAILUSER,
-            to: process.env.EMAILUSER,
-            subject: emailSubject,
-            html: emailBody
-        };
-        await sendEmail(mailOptions);
-        throw error; 
-    }
-};
+    const mailOptions = {
+      from: process.env.EMAILUSER,
+      to: process.env.EMAILUSER,
+      subject: emailSubject,
+      html: emailBody,
+    };
+    await sendEmail(mailOptions);
+    throw error;
+  }
+}
 
 // Scheduled execution for Google Cloud Scheduler
-exports.scrapeAndComparePricesOnSchedule = onSchedule({
+exports.scrapeAndComparePricesOnSchedule = onSchedule(
+  {
     schedule: '0 7 * * 5',
     timeZone: 'Europe/Paris',
     timeoutSeconds: 300,
     memory: '2GiB',
-}, async () => {
+  },
+  async () => {
     // Cron explanation:
     //  0: Minute (0th minute)
     //  7: Hour (7 AM)
@@ -74,17 +75,37 @@ exports.scrapeAndComparePricesOnSchedule = onSchedule({
 
     console.log('Scheduled function triggered.');
     await runSaleCheckerAlgorithm();
-});
+  }
+);
 
-// On-demand HTTP execution on request 
-exports.scrapeAndComparePricesOnRequest = onRequest({ timeoutSeconds: 300, memory: '1GiB' }, async (req, res) => {
-    if (req.method !== 'GET') return res.status(405).send({ success: false, error: 'Method Not Allowed. Only GET requests are allowed.' });
+// On-demand HTTP execution on request
+exports.scrapeAndComparePricesOnRequest = onRequest(
+  { timeoutSeconds: 300, memory: '1GiB' },
+  async (req, res) => {
+    if (req.method !== 'GET')
+      return res
+        .status(405)
+        .send({
+          success: false,
+          error: 'Method Not Allowed. Only GET requests are allowed.',
+        });
     console.log('On-demand request received.');
 
     try {
-        await runSaleCheckerAlgorithm();
-        res.status(200).json({ success: true, message: 'Price monitoring executed successfully.' });
+      await runSaleCheckerAlgorithm();
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: 'Price monitoring executed successfully.',
+        });
     } catch (error) {
-        res.status(500).send({ success: false, error: `An error occurred while scraping the webpage: ${error.message}` });
+      res
+        .status(500)
+        .send({
+          success: false,
+          error: `An error occurred while scraping the webpage: ${error.message}`,
+        });
     }
-});
+  }
+);
