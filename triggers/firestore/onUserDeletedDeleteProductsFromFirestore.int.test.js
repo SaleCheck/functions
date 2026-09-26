@@ -102,7 +102,7 @@ exports.onUserDeletedDeleteProductsFromFirestoreIntTest = () => {
       let errorThrown = false;
       try {
         await _test.deleteUserProducts(userWithNoProducts);
-      } catch (err) {
+      } catch {
         errorThrown = true;
       }
 

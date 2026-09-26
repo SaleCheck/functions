@@ -70,7 +70,7 @@ exports.onProductDeletedDeleteFromStorageIntTest = () => {
       let errorThrown = false;
       try {
         await _test.deleteProductData(nonExistentProductId);
-      } catch (err) {
+      } catch {
         errorThrown = true;
       }
 
