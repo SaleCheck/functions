@@ -1,0 +1,12 @@
+name: Security Scan for Vulnerabilities using `npm audit` on PR to `main`
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-salecheck-npm-audit:
+    uses: SaleCheck/sale-check/.github/workflows/npm-audit-on-pr.yml@main
+    with:
+      working-directory: '.'
