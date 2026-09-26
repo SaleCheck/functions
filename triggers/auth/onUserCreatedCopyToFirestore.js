@@ -4,7 +4,7 @@ const { Timestamp } = require('firebase-admin/firestore');
 
 const db = admin.firestore();
 
-async function onUserCreatedCopyToFirestore(user) {
+async function copyUserToFirestore(user) {
   const userData = {
     createdOn: Timestamp.now() ?? null,
     disabled: user.disabled ?? null,
@@ -30,8 +30,8 @@ exports.onUserCreatedCopyToFirestore = functions.auth
   .user()
   .onCreate(async (user) => {
     console.log('User created:', user.uid);
-    return onUserCreatedCopyToFirestore(user);
+    return copyUserToFirestore(user);
   });
 
 // Export for testing
-module.exports.onUserCreatedCopyToFirestore = onUserCreatedCopyToFirestore;
+exports._test = { copyUserToFirestore };

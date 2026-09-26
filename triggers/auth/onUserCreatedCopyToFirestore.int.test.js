@@ -2,9 +2,7 @@ const { getAuth } = require('firebase-admin/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const { expect } = require('chai');
 const admin = require('firebase-admin');
-const {
-  onUserCreatedCopyToFirestore,
-} = require('./onUserCreatedCopyToFirestore');
+const { _test } = require('./onUserCreatedCopyToFirestore');
 
 const auth = getAuth();
 const db = getFirestore();
@@ -41,7 +39,7 @@ exports.onUserCreatedCopyToFirestoreIntTest = () => {
     it('should copy new auth user to Firestore users collection', async () => {
       const user = await createTestUser();
 
-      await onUserCreatedCopyToFirestore(user);
+      await _test.copyUserToFirestore(user);
 
       const userDoc = await db.collection('users').doc(user.uid).get();
       const userSnapshot = userDoc.data();
@@ -69,7 +67,7 @@ exports.onUserCreatedCopyToFirestoreIntTest = () => {
       const startTime = Date.now();
       const user = await createTestUser();
 
-      await onUserCreatedCopyToFirestore(user);
+      await _test.copyUserToFirestore(user);
 
       const endTime = Date.now();
 
@@ -90,7 +88,7 @@ exports.onUserCreatedCopyToFirestoreIntTest = () => {
         photoURL: undefined,
       });
 
-      await onUserCreatedCopyToFirestore(user);
+      await _test.copyUserToFirestore(user);
 
       const userDoc = await db.collection('users').doc(user.uid).get();
       const userSnapshot = userDoc.data();
@@ -107,7 +105,7 @@ exports.onUserCreatedCopyToFirestoreIntTest = () => {
         phoneNumber: '+10000000001',
       });
 
-      await onUserCreatedCopyToFirestore(user);
+      await _test.copyUserToFirestore(user);
 
       const doc = await db.collection('users').doc(user.uid).get();
       expect(doc.exists).to.be.true;
