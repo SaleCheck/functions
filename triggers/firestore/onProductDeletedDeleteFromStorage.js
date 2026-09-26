@@ -6,7 +6,19 @@ const bucket = admin.storage().bucket();
 async function deleteProductData(productId) {
   const folderPath = `productImages/${productId}/`;
 
+  // Get files matching the prefix before deletion to retrieve their names
+  const [files] = await bucket.getFiles({ prefix: folderPath });
+
+  if (files.length === 0) return { count: 0, deletedFiles: [] };
+
+  const deletedFiles = files.map((file) => file.name);
+
   await bucket.deleteFiles({ prefix: folderPath });
+
+  return {
+    count: deletedFiles.length,
+    deletedFiles,
+  };
 }
 
 // Firestore trigger for document deletion in 'productsToCheck' collection
@@ -17,7 +29,13 @@ exports.onProductDeletedDeleteFromStorage = functions.firestore
     console.log(`Product deleted: ${productId}`);
 
     try {
-      await deleteProductData(productId);
+      const { count, deletedFiles } = await deleteProductData(productId);
+
+      console.log(
+        `Successfully deleted ${count} storage file(s) for product: ${productId}`
+      );
+      if (count > 0)
+        console.log(`Deleted File Paths:\n${deletedFiles.join('\n')}`);
     } catch (error) {
       console.error(
         `Error deleting storage files for product ${productId}:`,

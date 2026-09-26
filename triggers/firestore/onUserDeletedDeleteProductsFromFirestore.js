@@ -9,16 +9,22 @@ async function deleteUserProducts(userId) {
     .where('user', '==', userId)
     .get();
 
-  if (snapshot.empty) {
-    return;
-  }
+  if (snapshot.empty) return { count: 0, deletedIds: [] };
 
   const batch = db.batch();
+  const deletedIds = [];
+
   snapshot.docs.forEach((doc) => {
     batch.delete(doc.ref);
+    deletedIds.push(doc.id);
   });
 
   await batch.commit();
+
+  return {
+    count: deletedIds.length,
+    deletedIds,
+  };
 }
 
 // Firestore trigger for document deletion in 'users' collection
@@ -29,8 +35,13 @@ exports.onUserDeletedDeleteProductsFromFirestore = functions.firestore
     console.log(`User document deleted in Firestore: ${userId}`);
 
     try {
-      await deleteUserProducts(userId);
-      console.log(`Successfully deleted products for user: ${userId}`);
+      const { count, deletedIds } = await deleteUserProducts(userId);
+
+      console.log(
+        `Successfully deleted ${count} product(s) for user: ${userId}`
+      );
+      if (count > 0)
+        console.log(`Deleted Product IDs:\n${deletedIds.join('\n')}`);
     } catch (error) {
       console.error(
         `Error deleting products for deleted user ${userId}:`,
