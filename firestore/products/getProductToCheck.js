@@ -16,7 +16,7 @@ exports.getProductToCheck = onRequest(async (req, res) => {
     if (!productId)
       return res.status(400).send({
         success: false,
-        error: "'id' is required in the query parameters.",
+        error: '"id" is required in the query parameters.',
       });
 
     try {

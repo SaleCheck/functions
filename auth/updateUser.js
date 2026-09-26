@@ -20,7 +20,7 @@ exports.updateUser = onRequest(async (req, res) => {
       return res.status(400).send({
         success: false,
         error:
-          "Bad Request: 'uid' and 'updateData' are required in the payload.",
+          'Bad Request: "uid" and "updateData" are required in the payload.',
       });
 
     try {

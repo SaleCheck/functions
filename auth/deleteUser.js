@@ -19,7 +19,7 @@ exports.deleteUser = onRequest(async (req, res) => {
     if (!uid)
       return res.status(400).send({
         success: false,
-        error: "Bad Request: 'uid' is required in the payload.",
+        error: 'Bad Request: "uid" is required in the payload.',
       });
 
     try {

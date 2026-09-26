@@ -14,7 +14,7 @@ exports.getUser = onRequest(async (req, res) => {
     if (!uid)
       return res.status(400).send({
         success: false,
-        error: "Bag Request: 'uid' is required in the query parameters.",
+        error: 'Bad Request: "uid" is required in the query parameters.',
       });
 
     getAuth()

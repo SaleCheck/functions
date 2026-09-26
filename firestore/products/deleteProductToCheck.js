@@ -25,7 +25,7 @@ exports.deleteProductToCheck = onRequest(async (req, res) => {
       if (!data || !data.id)
         return res
           .status(400)
-          .send("Bad request: 'id' is required in the payload.");
+          .send('Bad request: "id" is required in the payload.');
 
       const productId = data.id;
       const docRef = db.collection('productsToCheck').doc(productId);
