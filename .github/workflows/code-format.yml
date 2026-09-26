@@ -1,0 +1,10 @@
+name: Code Formatting
+
+on:
+  pull_request:
+
+jobs:
+  call-salecheck-formatting:
+    uses: SaleCheck/sale-check/.github/workflows/code-formatting-on-pr.yml@main
+    with:
+      working-directory: '.'
