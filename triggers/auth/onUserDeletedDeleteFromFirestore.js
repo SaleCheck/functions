@@ -20,7 +20,7 @@ async function deleteUserData(user) {
   }
 }
 
-// Firebase trigger (thin wrapper)
+// Firebase trigger for user deletion in auth
 exports.onUserDeletedDeleteFromFirestore = functions.auth
   .user()
   .onDelete(async (user) => {

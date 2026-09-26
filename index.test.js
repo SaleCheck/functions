@@ -44,6 +44,12 @@ const {
 const {
   onUserDeletedDeleteFromFirestoreIntTest,
 } = require('./triggers/auth/onUserDeletedDeleteFromFirestore.int.test');
+const {
+  onUserDeletedDeleteProductsFromFirestoreIntTest,
+} = require('./triggers/firestore/onUserDeletedDeleteProductsFromFirestore.int.test');
+const {
+  onProductDeletedDeleteFromStorageIntTest,
+} = require('./triggers/firestore/onProductDeletedDeleteFromStorage.int.test');
 
 const { createUserIntTest } = require('./auth/createUser.int.test');
 const { getUserIntTest } = require('./auth/getUser.int.test');
@@ -57,6 +63,8 @@ deleteProductToCheckIntTest();
 
 onUserCreatedCopyToFirestoreIntTest();
 onUserDeletedDeleteFromFirestoreIntTest();
+onUserDeletedDeleteProductsFromFirestoreIntTest();
+onProductDeletedDeleteFromStorageIntTest();
 
 createUserIntTest();
 getUserIntTest();
