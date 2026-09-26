@@ -13,8 +13,7 @@ const firebaseConfig = {
   measurementId: process.env.MEASUREMENT_ID,
 };
 initializeApp(firebaseConfig);
-if (!admin.apps.length)
-  initializeAdminApp({ storageBucket: process.env.STORAGE_BUCKET });
+if (!admin.apps.length) initializeAdminApp();
 
 const {
   scrapeAndComparePricesOnRequest,
@@ -27,15 +26,16 @@ const createProductToCheck = require('./firestore/products/createProductToCheck'
 const getProductToCheck = require('./firestore/products/getProductToCheck');
 const updateProductToCheck = require('./firestore/products/updateProductToCheck');
 const deleteProductToCheck = require('./firestore/products/deleteProductToCheck');
-const deleteProductImagesFromStorage = require('./firestore/products/deleteProductImagesFromStorage');
-
-const onUserCreatedCopyToFirestore = require('./triggers/auth/onUserCreatedCopyToFirestore');
-const onUserDeletedDeleteFromFirestore = require('./triggers/auth/onUserDeletedDeleteFromFirestore');
 
 const createUser = require('./auth/createUser');
 const getUser = require('./auth/getUser');
 const updateUser = require('./auth/updateUser');
 const deleteUser = require('./auth/deleteUser');
+
+const onUserCreatedCopyToFirestore = require('./triggers/auth/onUserCreatedCopyToFirestore');
+const onUserDeletedDeleteFromFirestore = require('./triggers/auth/onUserDeletedDeleteFromFirestore');
+const onUserDeletedDeleteProductsFromFirestore = require('./triggers/auth/onUserDeletedDeleteProductsFromFirestore');
+const onProductDeletedDeleteFromStorage = require('./triggers/firestore/onProductDeletedDeleteFromStorage');
 
 exports.scrapeAndComparePricesOnRequest = scrapeAndComparePricesOnRequest;
 exports.scrapeAndComparePricesOnSchedule = scrapeAndComparePricesOnSchedule;
@@ -47,15 +47,17 @@ exports.createProductToCheck = createProductToCheck.createProductToCheck;
 exports.getProductToCheck = getProductToCheck.getProductToCheck;
 exports.updateProductToCheck = updateProductToCheck.updateProductToCheck;
 exports.deleteProductToCheck = deleteProductToCheck.deleteProductToCheck;
-exports.deleteProductImagesFromStorage =
-  deleteProductImagesFromStorage.deleteProductImagesFromStorage;
-
-exports.onUserCreatedCopyToFirestore =
-  onUserCreatedCopyToFirestore.onUserCreatedCopyToFirestore;
-exports.onUserDeletedDeleteFromFirestore =
-  onUserDeletedDeleteFromFirestore.onUserDeletedDeleteFromFirestore;
 
 exports.createUser = createUser.createUser;
 exports.getUser = getUser.getUser;
 exports.updateUser = updateUser.updateUser;
 exports.deleteUser = deleteUser.deleteUser;
+
+exports.onUserCreatedCopyToFirestore =
+  onUserCreatedCopyToFirestore.onUserCreatedCopyToFirestore;
+exports.onUserDeletedDeleteFromFirestore =
+  onUserDeletedDeleteFromFirestore.onUserDeletedDeleteFromFirestore;
+exports.onUserDeletedDeleteProductsFromFirestore =
+  onUserDeletedDeleteProductsFromFirestore.onUserDeletedDeleteProductsFromFirestore;
+exports.onProductDeletedDeleteFromStorage =
+  onProductDeletedDeleteFromStorage.onProductDeletedDeleteFromStorage;
