@@ -10,19 +10,15 @@ exports.createProductToCheck = onRequest(
   async (req, res) => {
     cors(req, res, async () => {
       if (req.method !== 'POST')
-        return res
-          .status(405)
-          .send({
-            success: false,
-            error: 'Method Not Allowed. Only POST requests are allowed.',
-          });
+        return res.status(405).send({
+          success: false,
+          error: 'Method Not Allowed. Only POST requests are allowed.',
+        });
       if (req.get('Content-Type') !== 'application/json') {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: 'Content-Type must be application/json.',
-          });
+        return res.status(400).send({
+          success: false,
+          error: 'Content-Type must be application/json.',
+        });
       }
 
       try {
@@ -34,12 +30,10 @@ exports.createProductToCheck = onRequest(
 
         for (const key of ALLOWED_FIELDS) {
           if (!data.hasOwnProperty(key)) {
-            return res
-              .status(400)
-              .send({
-                success: false,
-                error: `Bad Request: Missing field ${key} in payload.`,
-              });
+            return res.status(400).send({
+              success: false,
+              error: `Bad Request: Missing field ${key} in payload.`,
+            });
           }
         }
 
@@ -54,12 +48,10 @@ exports.createProductToCheck = onRequest(
 
         // Add the filtered data to Firestore
         const docRef = await db.collection('productsToCheck').add(filteredData);
-        res
-          .status(201)
-          .send({
-            message: 'Product added successfully',
-            documentId: docRef.id,
-          });
+        res.status(201).send({
+          message: 'Product added successfully',
+          documentId: docRef.id,
+        });
       } catch (error) {
         console.error('Error adding document: ', error);
         res.status(500).send({ status: 'Internal Server Error', error: error });

@@ -8,19 +8,15 @@ const db = getFirestore();
 exports.updateProductToCheck = onRequest(async (req, res) => {
   cors(req, res, async () => {
     if (req.method !== 'PATCH')
-      return res
-        .status(405)
-        .send({
-          success: false,
-          error: 'Method Not Allowed. Only PATCH requests are allowed.',
-        });
+      return res.status(405).send({
+        success: false,
+        error: 'Method Not Allowed. Only PATCH requests are allowed.',
+      });
     if (req.get('Content-Type') !== 'application/json') {
-      return res
-        .status(400)
-        .send({
-          success: false,
-          error: 'Content-Type must be application/json.',
-        });
+      return res.status(400).send({
+        success: false,
+        error: 'Content-Type must be application/json.',
+      });
     }
 
     try {
@@ -49,12 +45,10 @@ exports.updateProductToCheck = onRequest(async (req, res) => {
         updatedData.lastUpdated = Timestamp.now();
         await docRef.update(updatedData);
 
-        return res
-          .status(200)
-          .json({
-            success: true,
-            message: `Product ${productId} updated successfully.`,
-          });
+        return res.status(200).json({
+          success: true,
+          message: `Product ${productId} updated successfully.`,
+        });
       }
     } catch (error) {
       console.error('Error updating product:', error);

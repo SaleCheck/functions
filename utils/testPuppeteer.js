@@ -10,12 +10,10 @@ exports.testPuppeteer = onRequest(
       const cssSelector = req.query.cssSelector || req.body.cssSelector;
 
       if (req.method !== 'POST')
-        return res
-          .status(405)
-          .send({
-            success: false,
-            error: 'Method Not Allowed. Only POST requests are allowed.',
-          });
+        return res.status(405).send({
+          success: false,
+          error: 'Method Not Allowed. Only POST requests are allowed.',
+        });
       if (!productUrl || !cssSelector)
         return res
           .status(400)
