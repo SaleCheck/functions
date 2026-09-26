@@ -8,7 +8,8 @@
     "gcp-build": "node node_modules/puppeteer/install.mjs",
     "emu": "firebase emulators:start",
     "tree": "tree -a -C --gitignore --dirsfirst",
-    "test": "cross-env mocha '*.test.js'"
+    "test": "cross-env mocha '*.test.js'",
+    "prettier": "prettier --write ./src"
   },
   "engines": {
     "node": "22"
@@ -36,6 +37,7 @@
     "eslint": "^10.0.1",
     "globals": "^17.3.0",
     "mocha": "^11.7.5",
+    "prettier": "^3.9.9",
     "sinon": "^21.0.1",
     "supertest": "^7.1.1"
   },
