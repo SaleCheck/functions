@@ -13,7 +13,8 @@ const firebaseConfig = {
   measurementId: process.env.MEASUREMENT_ID,
 };
 initializeApp(firebaseConfig);
-if (!admin.apps.length) initializeAdminApp();
+if (!admin.apps.length)
+  initializeAdminApp({ storageBucket: process.env.STORAGE_BUCKET });
 
 const {
   scrapeAndComparePricesOnRequest,
@@ -26,9 +27,10 @@ const createProductToCheck = require('./firestore/products/createProductToCheck'
 const getProductToCheck = require('./firestore/products/getProductToCheck');
 const updateProductToCheck = require('./firestore/products/updateProductToCheck');
 const deleteProductToCheck = require('./firestore/products/deleteProductToCheck');
+const deleteProductImagesFromStorage = require('./firestore/products/deleteProductImagesFromStorage');
 
-const copyUserObjectToFirestore = require('./firestore/users/copyUserObjectToFirestore');
-const deleteUserObjectFromFirestore = require('./firestore/users/deleteUserObjectFromFirestore');
+const onUserCreatedCopyToFirestore = require('./triggers/auth/onUserCreatedCopyToFirestore');
+const onUserDeletedDeleteFromFirestore = require('./triggers/auth/onUserDeletedDeleteFromFirestore');
 
 const createUser = require('./auth/createUser');
 const getUser = require('./auth/getUser');
@@ -45,11 +47,13 @@ exports.createProductToCheck = createProductToCheck.createProductToCheck;
 exports.getProductToCheck = getProductToCheck.getProductToCheck;
 exports.updateProductToCheck = updateProductToCheck.updateProductToCheck;
 exports.deleteProductToCheck = deleteProductToCheck.deleteProductToCheck;
+exports.deleteProductImagesFromStorage =
+  deleteProductImagesFromStorage.deleteProductImagesFromStorage;
 
-exports.copyUserObjectToFirestore =
-  copyUserObjectToFirestore.copyUserObjectToFirestore;
-exports.deleteUserObjectFromFirestore =
-  deleteUserObjectFromFirestore.deleteUserObjectFromFirestore;
+exports.onUserCreatedCopyToFirestore =
+  onUserCreatedCopyToFirestore.onUserCreatedCopyToFirestore;
+exports.onUserDeletedDeleteFromFirestore =
+  onUserDeletedDeleteFromFirestore.onUserDeletedDeleteFromFirestore;
 
 exports.createUser = createUser.createUser;
 exports.getUser = getUser.getUser;
