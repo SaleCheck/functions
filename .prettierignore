@@ -1,0 +1,19 @@
+# Dependencies & build artifacts
+node_modules/
+lib/
+dist/
+.github/
+
+# Config/data, not code
+**/config/*.json
+.env
+.env.*
+
+# Lockfiles
+package-lock.json
+
+# Anything else non-code you don't want touched
+.prettierrc
+.puppeteerrc.cjs
+.mocharc.js
+eslint.config.cjs

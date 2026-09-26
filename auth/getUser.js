@@ -5,21 +5,17 @@ const cors = require('cors')({ origin: true });
 exports.getUser = onRequest(async (req, res) => {
   cors(req, res, async () => {
     if (req.method !== 'GET')
-      return res
-        .status(405)
-        .send({
-          success: false,
-          error: 'Method Not Allowed. Only GET requests are allowed.',
-        });
+      return res.status(405).send({
+        success: false,
+        error: 'Method Not Allowed. Only GET requests are allowed.',
+      });
 
     const uid = req.query.uid;
     if (!uid)
-      return res
-        .status(400)
-        .send({
-          success: false,
-          error: "Bag Request: 'uid' is required in the query parameters.",
-        });
+      return res.status(400).send({
+        success: false,
+        error: "Bag Request: 'uid' is required in the query parameters.",
+      });
 
     getAuth()
       .getUser(uid)

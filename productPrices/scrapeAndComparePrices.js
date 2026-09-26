@@ -83,29 +83,23 @@ exports.scrapeAndComparePricesOnRequest = onRequest(
   { timeoutSeconds: 300, memory: '1GiB' },
   async (req, res) => {
     if (req.method !== 'GET')
-      return res
-        .status(405)
-        .send({
-          success: false,
-          error: 'Method Not Allowed. Only GET requests are allowed.',
-        });
+      return res.status(405).send({
+        success: false,
+        error: 'Method Not Allowed. Only GET requests are allowed.',
+      });
     console.log('On-demand request received.');
 
     try {
       await runSaleCheckerAlgorithm();
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: 'Price monitoring executed successfully.',
-        });
+      res.status(200).json({
+        success: true,
+        message: 'Price monitoring executed successfully.',
+      });
     } catch (error) {
-      res
-        .status(500)
-        .send({
-          success: false,
-          error: `An error occurred while scraping the webpage: ${error.message}`,
-        });
+      res.status(500).send({
+        success: false,
+        error: `An error occurred while scraping the webpage: ${error.message}`,
+      });
     }
   }
 );
