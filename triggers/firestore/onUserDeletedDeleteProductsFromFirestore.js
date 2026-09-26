@@ -21,7 +21,7 @@ async function deleteUserProducts(userId) {
   await batch.commit();
 }
 
-// Firebase trigger wrapper (handles logging)
+// Firestore trigger for document deletion in 'users' collection
 exports.onUserDeletedDeleteProductsFromFirestore = functions.firestore
   .document('users/{userId}')
   .onDelete(async (snap, context) => {
@@ -39,4 +39,5 @@ exports.onUserDeletedDeleteProductsFromFirestore = functions.firestore
     }
   });
 
+// Export for testing
 exports._test = { deleteUserProducts };

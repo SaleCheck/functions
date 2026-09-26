@@ -46,7 +46,7 @@ const {
 } = require('./triggers/auth/onUserDeletedDeleteFromFirestore.int.test');
 const {
   onUserDeletedDeleteProductsFromFirestoreIntTest,
-} = require('./triggers/auth/onUserDeletedDeleteProductsFromFirestore.int.test');
+} = require('./triggers/firestore/onUserDeletedDeleteProductsFromFirestore.int.test');
 const {
   onProductDeletedDeleteFromStorageIntTest,
 } = require('./triggers/firestore/onProductDeletedDeleteFromStorage.int.test');

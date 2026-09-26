@@ -34,7 +34,7 @@ const deleteUser = require('./auth/deleteUser');
 
 const onUserCreatedCopyToFirestore = require('./triggers/auth/onUserCreatedCopyToFirestore');
 const onUserDeletedDeleteFromFirestore = require('./triggers/auth/onUserDeletedDeleteFromFirestore');
-const onUserDeletedDeleteProductsFromFirestore = require('./triggers/auth/onUserDeletedDeleteProductsFromFirestore');
+const onUserDeletedDeleteProductsFromFirestore = require('./triggers/firestore/onUserDeletedDeleteProductsFromFirestore');
 const onProductDeletedDeleteFromStorage = require('./triggers/firestore/onProductDeletedDeleteFromStorage');
 
 exports.scrapeAndComparePricesOnRequest = scrapeAndComparePricesOnRequest;
