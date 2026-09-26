@@ -1,18 +1,15 @@
 const functions = require('firebase-functions/v1');
 const admin = require('firebase-admin');
 
-// const db = admin.firestore();
 const bucket = admin.storage().bucket();
 
 async function deleteProductData(productId) {
-  // Path prefix for the product's directory in Storage
   const folderPath = `productImages/${productId}/`;
 
-  // Deletes all files and the directory under this prefix
   await bucket.deleteFiles({ prefix: folderPath });
 }
 
-// Firestore trigger for document deletion
+// Firestore trigger for document deletion in 'productsToCheck' collection
 exports.onProductDeletedDeleteFromStorage = functions.firestore
   .document('productsToCheck/{productId}')
   .onDelete(async (snap, context) => {

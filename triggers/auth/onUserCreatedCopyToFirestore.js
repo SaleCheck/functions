@@ -25,7 +25,7 @@ async function copyUserToFirestore(user) {
   return userData;
 }
 
-// Firebase trigger (thin wrapper)
+// Firebase trigger for user creation in auth
 exports.onUserCreatedCopyToFirestore = functions.auth
   .user()
   .onCreate(async (user) => {
