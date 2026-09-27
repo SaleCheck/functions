@@ -5,6 +5,6 @@ on:
 
 jobs:
   call-salecheck-formatting:
-    uses: SaleCheck/sale-check/.github/workflows/code-formatting-on-pr.yml@main
+    uses: SaleCheck/sale-check/.github/workflows/formatting-linting-on-pr.yml@main
     with:
       working-directory: '.'
