@@ -20,7 +20,7 @@ async function copyUserToFirestore(user) {
   };
 
   const docRef = db.collection('users').doc(user.uid);
-  await docRef.set(userData);
+  await docRef.set(userData, { merge: true });
 
   return userData;
 }
