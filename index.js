@@ -32,6 +32,8 @@ const getUser = require('./auth/getUser');
 const updateUser = require('./auth/updateUser');
 const deleteUser = require('./auth/deleteUser');
 
+const sendContactMessage = require('./contact/sendContactMessage');
+
 const onUserCreatedCopyToFirestore = require('./triggers/auth/onUserCreatedCopyToFirestore');
 const onUserDeletedDeleteFromFirestore = require('./triggers/auth/onUserDeletedDeleteFromFirestore');
 const onUserDeletedDeleteProductsFromFirestore = require('./triggers/firestore/onUserDeletedDeleteProductsFromFirestore');
@@ -52,6 +54,8 @@ exports.createUser = createUser.createUser;
 exports.getUser = getUser.getUser;
 exports.updateUser = updateUser.updateUser;
 exports.deleteUser = deleteUser.deleteUser;
+
+exports.sendContactMessage = sendContactMessage.sendContactMessage;
 
 exports.onUserCreatedCopyToFirestore =
   onUserCreatedCopyToFirestore.onUserCreatedCopyToFirestore;
