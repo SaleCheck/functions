@@ -38,6 +38,15 @@ const {
   deleteProductToCheckIntTest,
 } = require('./firestore/products/deleteProductToCheck.int.test');
 
+const { createUserIntTest } = require('./auth/createUser.int.test');
+const { getUserIntTest } = require('./auth/getUser.int.test');
+const { updateUserIntTest } = require('./auth/updateUser.int.test');
+const { deleteUserIntTest } = require('./auth/deleteUser.int.test');
+
+const {
+  sendContactMessageIntTest,
+} = require('./contact/sendContactMessage.int.test');
+
 const {
   onUserCreatedCopyToFirestoreIntTest,
 } = require('./triggers/auth/onUserCreatedCopyToFirestore.int.test');
@@ -51,25 +60,22 @@ const {
   onProductDeletedDeleteFromStorageIntTest,
 } = require('./triggers/firestore/onProductDeletedDeleteFromStorage.int.test');
 
-const { createUserIntTest } = require('./auth/createUser.int.test');
-const { getUserIntTest } = require('./auth/getUser.int.test');
-const { updateUserIntTest } = require('./auth/updateUser.int.test');
-const { deleteUserIntTest } = require('./auth/deleteUser.int.test');
-
 createProductToCheckIntTest();
 getProductToCheckIntTest();
 updateProductToCheckIntTest();
 deleteProductToCheckIntTest();
 
-onUserCreatedCopyToFirestoreIntTest();
-onUserDeletedDeleteFromFirestoreIntTest();
-onUserDeletedDeleteProductsFromFirestoreIntTest();
-onProductDeletedDeleteFromStorageIntTest();
-
 createUserIntTest();
 getUserIntTest();
 updateUserIntTest();
 deleteUserIntTest();
+
+sendContactMessageIntTest();
+
+onUserCreatedCopyToFirestoreIntTest();
+onUserDeletedDeleteFromFirestoreIntTest();
+onUserDeletedDeleteProductsFromFirestoreIntTest();
+onProductDeletedDeleteFromStorageIntTest();
 
 describe('All exported functions in index.js have corresponding *IntTest in index.test.js', function () {
   const indexExports = require('./index.js');
