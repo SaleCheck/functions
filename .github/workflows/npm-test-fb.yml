@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-salecheck-npm-test-firebase:
-    uses: SaleCheck/sale-check/.github/workflows/npm-test-firebase-on-pr.yml@main
+    uses: SaleCheck/sale-check/.github/workflows/npm-test-fb-on-pr.yml@main
     with:
       working-directory: '.'
     secrets: inherit
