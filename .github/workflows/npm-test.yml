@@ -1,0 +1,13 @@
+name: Run Test Suites for Firebase Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-salecheck-npm-test-firebase:
+    uses: SaleCheck/sale-check/.github/workflows/npm-test-firebase-on-pr.yml@main
+    with:
+      working-directory: '.'
+    secrets: inherit
